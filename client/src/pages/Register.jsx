@@ -1,20 +1,44 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Logo from "../assets/logo.svg";
+import { toastOptions } from "../utils/constants";
+
+const initialState = {
+	username: "",
+	email: "",
+	password: "",
+	confirmPassword: "",
+};
 
 export default function Register() {
+	const [values, setValues] = useState(initialState);
 	const handleChange = (e) => {
-		console.log("change", e);
+		setValues((currentValues) => ({
+			...currentValues,
+			[e.target.name]: e.target.value,
+		}));
 	};
+
+	const handleValidation = () => {
+		const { email, password, confirmPassword, username } = values;
+		if (password !== confirmPassword) {
+			toast.error("Your passwords don't match!", toastOptions);
+		}
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		alert("Form");
-		console.log("Event", e);
+		handleValidation();
 	};
+
 	return (
 		<>
 			<FormContainer>
-				<form onSubmit={handleSubmit}>
+				<form action="" onSubmit={handleSubmit}>
 					<div className="brand">
 						<img
 							src={Logo}
@@ -27,24 +51,28 @@ export default function Register() {
 						placeholder="Username"
 						name="username"
 						onChange={handleChange}
+						value={values.username}
 					/>
 					<input
 						type="email"
 						placeholder="Email"
 						name="email"
 						onChange={handleChange}
+						value={values.email}
 					/>
 					<input
 						type="password"
 						placeholder="Password"
-						name="Password"
+						name="password"
 						onChange={handleChange}
+						value={values.password}
 					/>
 					<input
 						type="password"
 						placeholder="Confirm Password"
 						name="confirmPassword"
 						onChange={handleChange}
+						value={values.confirmPassword}
 					/>
 					<button type="submit">Create New User</button>
 					<span>
@@ -53,6 +81,7 @@ export default function Register() {
 					</span>
 				</form>
 			</FormContainer>
+			<ToastContainer />
 		</>
 	);
 }
