@@ -1,10 +1,12 @@
 import { useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Logo from "../assets/logo.svg";
+import routes from "../utils/routes";
 import { toastOptions } from "../utils/constants";
 
 const initialState = {
@@ -13,6 +15,8 @@ const initialState = {
 	password: "",
 	confirmPassword: "",
 };
+const usernameMinLength = 3;
+const pwMinLength = 8;
 
 export default function Register() {
 	const [values, setValues] = useState(initialState);
@@ -24,21 +28,43 @@ export default function Register() {
 	};
 
 	const handleValidation = () => {
-		const { email, password, confirmPassword, username } = values;
+		const { confirmPassword, password } = values;
+		let toastMessage = null;
 		if (password !== confirmPassword) {
-			toast.error("Your passwords don't match!", toastOptions);
+			toastMessage = "Your passwords don't match!";
 		}
+
+		if (!toastMessage) return true;
+		toast.error(toastMessage, toastOptions);
+		return false;
+	};
+
+	const handleRequest = async () => {
+		const { email, password, username } = values;
+		const { data } = await axios.post(routes.registerRoute, {
+			username,
+			email,
+			password,
+		});
+		console.log("Register Data", data);
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		handleValidation();
+
+		const isValid = handleValidation();
+		if (!isValid) return;
+
+		handleRequest();
 	};
 
 	return (
 		<>
 			<FormContainer>
-				<form action="" onSubmit={handleSubmit}>
+				<form
+					action=""
+					onSubmit={handleSubmit}
+				>
 					<div className="brand">
 						<img
 							src={Logo}
@@ -48,6 +74,8 @@ export default function Register() {
 					</div>
 					<input
 						type="text"
+						required
+						minLength={usernameMinLength}
 						placeholder="Username"
 						name="username"
 						onChange={handleChange}
@@ -55,6 +83,7 @@ export default function Register() {
 					/>
 					<input
 						type="email"
+						required
 						placeholder="Email"
 						name="email"
 						onChange={handleChange}
@@ -62,6 +91,8 @@ export default function Register() {
 					/>
 					<input
 						type="password"
+						required
+						minLength={pwMinLength}
 						placeholder="Password"
 						name="password"
 						onChange={handleChange}
@@ -69,6 +100,8 @@ export default function Register() {
 					/>
 					<input
 						type="password"
+						required
+						minLength={pwMinLength}
 						placeholder="Confirm Password"
 						name="confirmPassword"
 						onChange={handleChange}
