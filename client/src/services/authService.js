@@ -1,28 +1,21 @@
 import axios from "axios";
 import routes from "../utils/routes";
 
-export const registerNewUser = async ({ email, password, username }) => {
-	try {
-		const response = await axios.post(routes.registerRoute, {
-			email,
-			password,
-			username,
-		});
-
-		return response;
-	} catch (error) {
-		console.log("Register User Error:", error);
-		const errorResponse = {
-			success: false,
-			status: error?.status || error?.response?.status,
+const handleBadResponse = (error) => {
+	const errorResponse = {
+		status: error?.status,
+		data: {
 			message: "An unexpected error occurred. Please try again later.",
-		};
-
-		if (error?.response && error.response?.message) {
-			errorResponse.message = error.response.message;
+			success: false,
 		}
-		return errorResponse;
+	};
+
+	if (error?.response && error.response?.data) {
+		errorResponse.data.message = error.response.data.message;
+		errorResponse.data.success = error.response.data.success;
 	}
+
+	return errorResponse;
 };
 
 export const loginUser = async ({ username, password }) => {
@@ -35,15 +28,21 @@ export const loginUser = async ({ username, password }) => {
 		return response;
 	} catch (error) {
 		console.log("Login User Error:", error);
-		const errorResponse = {
-			success: false,
-			status: error?.status || error?.response?.status,
-			message: "An unexpected error occurred. Please try again later.",
-		};
+		return handleBadResponse(error);
+	}
+};
 
-		if (error?.response && error.response?.message) {
-			errorResponse.message = error.response.message;
-		}
-		return errorResponse;
+export const registerNewUser = async ({ email, password, username }) => {
+	try {
+		const response = await axios.post(routes.registerRoute, {
+			email,
+			password,
+			username,
+		});
+
+		return response;
+	} catch (error) {
+		console.log("Register User Error:", error);
+		return handleBadResponse(error);
 	}
 };

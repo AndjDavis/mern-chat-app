@@ -65,7 +65,7 @@ export default function Register() {
 				);
 				navigate("/");
 			} else if (status === 409) {
-				toast.error("Email or username already exists", toastOptions);
+				toast.error(data.message, toastOptions);
 			} else {
 				const failMessage = data?.message || "Something went wrong...";
 				toast.error(failMessage, toastOptions);

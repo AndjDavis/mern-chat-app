@@ -15,8 +15,8 @@ import { toastOptions } from "../utils/constants";
 import "react-toastify/dist/ReactToastify.css";
 
 const initialState = {
-	username: "",
-	password: "",
+	username: "andjdavis",
+	password: "testtest",
 };
 
 export default function Login() {
@@ -54,15 +54,15 @@ export default function Login() {
 		try {
 			const formData = { ...values };
 			const { data, status } = await loginUser(formData);
-			if (data?.success && status === 201) {
+			if (data?.success && status === 200) {
 				localStorage.setItem(
 					process.env.REACT_APP_LOCALHOST_KEY,
 					JSON.stringify(data.user)
 				);
 
 				navigate("/");
-			} else if (status === 409) {
-				toast.error(data.msg, toastOptions);
+			} else if (status === 401) {
+				toast.error(data.message, toastOptions);
 			} else {
 				const failMessage = data?.message || "Something went wrong...";
 				toast.error(failMessage, toastOptions);
