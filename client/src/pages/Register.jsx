@@ -1,10 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
-import Logo from "../assets/logo.svg";
+import FormLogo from "../components/FormLogo";
+import {
+	StyledButton,
+	StyledContainer,
+	StyledForm,
+	StyledInput,
+	StyledSpan,
+} from "../styles/form-styles";
 import { toastOptions } from "../utils/constants";
 import { registerNewUser } from "../services/authService";
 
@@ -72,19 +78,10 @@ export default function Register() {
 
 	return (
 		<>
-			<FormContainer>
-				<form
-					action=""
-					onSubmit={handleSubmit}
-				>
-					<div className="brand">
-						<img
-							src={Logo}
-							alt="logo"
-						/>
-						<h1>snappy</h1>
-					</div>
-					<input
+			<StyledContainer>
+				<StyledForm onSubmit={handleSubmit}>
+					<FormLogo />
+					<StyledInput
 						type="text"
 						required
 						minLength={usernameMinLength}
@@ -93,7 +90,7 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.username}
 					/>
-					<input
+					<StyledInput
 						type="email"
 						required
 						placeholder="Email"
@@ -101,7 +98,7 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.email}
 					/>
-					<input
+					<StyledInput
 						type="password"
 						required
 						minLength={pwMinLength}
@@ -110,7 +107,7 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.password}
 					/>
-					<input
+					<StyledInput
 						type="password"
 						required
 						minLength={pwMinLength}
@@ -119,83 +116,14 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.confirmPassword}
 					/>
-					<button type="submit">Create New User</button>
-					<span>
+					<StyledButton type="submit">Create New User</StyledButton>
+					<StyledSpan>
 						Already Have an account?
 						<Link to="/login"> Login </Link>
-					</span>
-				</form>
-			</FormContainer>
+					</StyledSpan>
+				</StyledForm>
+			</StyledContainer>
 			<ToastContainer />
 		</>
 	);
 }
-
-const FormContainer = styled.div`
-	height: 100vh;
-	width: 100vw;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	gap: 1rem;
-	align-items: center;
-	background-color: #131324;
-	.brand {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		justify-content: center;
-		img {
-			height: 5rem;
-		}
-		h1 {
-			color: white;
-			text-transform: uppercase;
-		}
-	}
-
-	form {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-		background-color: #00000076;
-		border-radius: 2rem;
-		padding: 3rem 5rem;
-	}
-	input {
-		background-color: transparent;
-		padding: 1rem;
-		border: 0.1rem solid #4e0eff;
-		border-radius: 0.4rem;
-		color: white;
-		width: 100%;
-		font-size: 1rem;
-		&:focus {
-			border: 0.1rem solid #997af0;
-			outline: none;
-		}
-	}
-	button {
-		background-color: #4e0eff;
-		color: white;
-		padding: 1rem 2rem;
-		border: none;
-		font-weight: bold;
-		cursor: pointer;
-		border-radius: 0.4rem;
-		font-size: 1rem;
-		text-transform: uppercase;
-		&:hover {
-			background-color: #4e0eff;
-		}
-	}
-	span {
-		color: white;
-		text-transform: uppercase;
-		a {
-			color: #4e0eff;
-			text-decoration: none;
-			font-weight: bold;
-		}
-	}
-`;
