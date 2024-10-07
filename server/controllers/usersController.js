@@ -16,16 +16,19 @@ const registerNewUser = async (req, res, next) => {
 		}
 
 		const hashedPassword = await bcrypt.hash(req.body.password, 10);
-		const { password, ...user } = await User.create({
+		const newUser = await User.create({
 			username,
 			email,
 			password: hashedPassword,
 		});
 
+		// Exclude password before sending the user object
+		const { password: _, ...userWithoutPassword } = newUser.toObject();
+
 		return res.status(201).json({
-			success: false,
+			success: true,
 			message: "User created successfully",
-			user: user,
+			user: userWithoutPassword,
 		});
 	} catch (error) {
 		return res.status(500).json({
