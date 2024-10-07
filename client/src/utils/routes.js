@@ -1,5 +1,4 @@
-const host = process.env.HOST;
-console.log({ host });
+const host = process.env.REACT_APP_SERVER_BASE_URL;
 const allUsersRoute = `${host}/api/auth/allusers`;
 const loginRoute = `${host}/api/auth/login`;
 const logoutRoute = `${host}/api/auth/logout`;
