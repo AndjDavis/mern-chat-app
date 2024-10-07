@@ -24,3 +24,26 @@ export const registerNewUser = async ({ email, password, username }) => {
 		return errorResponse;
 	}
 };
+
+export const loginUser = async ({ username, password }) => {
+	try {
+		const response = await axios.post(routes.loginRoute, {
+			username,
+			password,
+		});
+
+		return response;
+	} catch (error) {
+		console.log("Login User Error:", error);
+		const errorResponse = {
+			success: false,
+			status: error?.status || error?.response?.status,
+			message: "An unexpected error occurred. Please try again later.",
+		};
+
+		if (error?.response && error.response?.message) {
+			errorResponse.message = error.response.message;
+		}
+		return errorResponse;
+	}
+};
