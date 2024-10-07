@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +13,7 @@ import {
 } from "../styles/form-styles";
 import { toastOptions } from "../utils/constants";
 import { registerNewUser } from "../services/authService";
+import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 
 const initialState = {
 	username: "test user",
@@ -25,6 +26,7 @@ const usernameMinLength = 3;
 const pwMinLength = 8;
 
 export default function Register() {
+	useRedirectIfLoggedIn();
 	const navigate = useNavigate();
 	const [values, setValues] = useState(initialState);
 

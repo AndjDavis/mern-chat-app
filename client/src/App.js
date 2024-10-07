@@ -21,6 +21,10 @@ export default function App() {
 					path="/chat"
 					element={<Chat />}
 				/>
+				<Route
+					path="/"
+					element={<Chat />}
+				/>
 			</Routes>
 		</BrowserRouter>
 	);

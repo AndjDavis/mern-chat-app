@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import FormLogo from "../components/FormLogo";
 import {
@@ -12,7 +13,7 @@ import {
 } from "../styles/form-styles";
 import { loginUser } from "../services/authService";
 import { toastOptions } from "../utils/constants";
-import "react-toastify/dist/ReactToastify.css";
+import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 
 const initialState = {
 	username: "andjdavis",
@@ -20,6 +21,7 @@ const initialState = {
 };
 
 export default function Login() {
+	useRedirectIfLoggedIn();
 	const navigate = useNavigate();
 	const [values, setValues] = useState(initialState);
 
