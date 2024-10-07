@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import styled from "styled-components";
@@ -14,6 +14,7 @@ const initialState = {
 	password: "testtest",
 	confirmPassword: "testtest",
 };
+
 const usernameMinLength = 3;
 const pwMinLength = 8;
 
@@ -50,7 +51,8 @@ export default function Register() {
 		try {
 			const { confirmPassword, ...formData } = values;
 			const { data, status } = await registerNewUser(formData);
-			if (status === 201 && data.status === "success") {
+
+			if (data?.success && status === 201) {
 				localStorage.setItem(
 					process.env.REACT_APP_LOCALHOST_KEY,
 					JSON.stringify(data.user)
@@ -63,7 +65,7 @@ export default function Register() {
 				toast.error(failMessage, toastOptions);
 			}
 		} catch (error) {
-			console.error("Register Form Error: ", error);
+			console.log("Register Form Error: ", error);
 			toast.error("An error occurred during registration", toastOptions);
 		}
 	};
