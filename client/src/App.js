@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Chat from "./pages/Chat";
+import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 
 export default function App() {
@@ -24,7 +24,7 @@ export default function App() {
 				/>
 				<Route
 					path="/"
-					element={<Chat />}
+					element={<Home />}
 				/>
 			</Routes>
 		</BrowserRouter>
