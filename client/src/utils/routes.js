@@ -6,6 +6,7 @@ const recieveMessageRoute = `${host}/api/messages/getmsg`;
 const registerRoute = `${host}/api/auth/register`;
 const sendMessageRoute = `${host}/api/messages/addmsg`;
 const setAvatarRoute = `${host}/api/auth/setavatar`;
+const fetchAvatars = "https://api.multiavatar.com";
 
 const routes = {
 	allUsersRoute,
@@ -15,6 +16,7 @@ const routes = {
 	registerRoute,
 	sendMessageRoute,
 	setAvatarRoute,
+	fetchAvatars,
 };
 
 export default routes;
