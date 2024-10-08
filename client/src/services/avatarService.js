@@ -8,7 +8,7 @@ import { handleBadResponse } from "./helpers";
 export const setProfileAvatar = async (selectedAvatar, userId) => {
 	try {
 		const url = `${routes.setAvatarRoute}/${userId}`;
-		const response = await axios.post(url, {
+		const response = await axios.put(url, {
 			image: selectedAvatar,
 		});
 		return response;
