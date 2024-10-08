@@ -62,7 +62,25 @@ const registerNewUser = async (req, res, next) => {
 	}
 };
 
+const logout = async (req, res, next) => {
+	try {
+		if (!req.params.id) {
+			return res
+				.status(400)
+				.json({ message: "User id is required", success: false });
+		}
+		// onlineUsers.delete(req.params.id);
+		return res.status(200).json({
+			success: true,
+			message: "User successfully logged out...",
+		});
+	} catch (error) {
+		return serverErrorResponse(res, error, "logout");
+	}
+};
+
 module.exports = {
 	register: registerNewUser,
 	login: loginUser,
+	logout: logout,
 };

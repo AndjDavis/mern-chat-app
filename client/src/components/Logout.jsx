@@ -10,8 +10,8 @@ export default function Logout({ user }) {
 
 	const handleClick = async () => {
 		try {
-			const { data } = await logUserOut(user._id);
-			if (data.status === 200) {
+			const { data, status } = await logUserOut(user._id);
+			if (status === 200 && data?.success) {
 				localStorage.clear();
 				navigate("/login");
 			}
