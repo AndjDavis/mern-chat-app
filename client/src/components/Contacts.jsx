@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import Logo from "./Logo";
-import { TitleWrapper } from "../styles/styles";
+import { TitleWrapper, AvatarContainer } from "../styles/styles";
 
 export default function Contacts({ contacts, changeChat, user }) {
 	const [currentSelectedIndex, setCurrentSelectedIndex] = useState(undefined);
@@ -77,18 +77,10 @@ const ContactCard = styled.div`
 	background-color: #ffffff34;
 	min-height: 5rem;
 	cursor: pointer;
-	width: 90%;
 	border-radius: 0.2rem;
 	padding: 0.4rem;
-	display: flex;
 	gap: 1rem;
-	align-items: center;
 	transition: 0.5s ease-in-out;
-	.avatar {
-		img {
-			height: 3rem;
-		}
-	}
 
 	&.selected {
 		background-color: #9a86f3;
@@ -118,18 +110,12 @@ const Container = styled.div`
 	background-color: #080420;
 `;
 
-const UserCard = styled.div`
-	background-color: #0d0d30;
+const UserCard = styled(AvatarContainer)`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background-color: #0d0d30;
 	gap: 2rem;
-	.avatar {
-		img {
-			height: 4rem;
-			max-inline-size: 100%;
-		}
-	}
 	@media screen and (min-width: 720px) and (max-width: 1080px) {
 		gap: 0.5rem;
 	}

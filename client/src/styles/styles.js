@@ -1,5 +1,20 @@
 import styled from "styled-components";
 
+export const AvatarContainer = styled.div.attrs((props) => ({
+	height: props.height || "3rem",
+}))`
+	.avatar img {
+		height: ${(props) => props.height};
+	}
+`;
+
+export const FlexBox = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+`;
+
 export const Button = styled.button`
 	background-color: #4e0eff;
 	color: white;
@@ -26,11 +41,7 @@ export const Card = styled.div`
 	}
 `;
 
-export const Container = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+export const Container = styled(FlexBox)`
 	gap: 3rem;
 	background-color: #131324;
 	height: 100vh;
@@ -42,21 +53,6 @@ export const Header = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 2rem;
-	.user-details {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		.avatar {
-			img {
-				height: 3rem;
-			}
-		}
-		.username {
-			h3 {
-				color: white;
-			}
-		}
-	}
 `;
 
 export const Form = styled.form`
@@ -93,7 +89,9 @@ export const Span = styled.span`
 `;
 
 export const TitleWrapper = styled.div`
-	h1, h2, h3 {
+	h1,
+	h2,
+	h3 {
 		color: white;
 	}
 `;
