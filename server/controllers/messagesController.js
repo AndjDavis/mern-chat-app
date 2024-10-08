@@ -9,7 +9,7 @@ const formatMessages = (messages, from) =>
 
 const getMessages = async (req, res, next) => {
 	try {
-		const { from, to } = req.body;
+		const { from, to } = req.query;
 		if (!from || !to) {
 			return res.status(400).json({
 				message: "Missing fields in the request body",
@@ -31,7 +31,7 @@ const getMessages = async (req, res, next) => {
 			message: "Successfully fetched messages",
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "getMessages", 400);
+		return serverErrorResponse(res, error, "getMessages", 500);
 	}
 };
 
