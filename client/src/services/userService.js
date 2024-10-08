@@ -3,12 +3,11 @@ import axios from "axios";
 import routes from "../utils/routes";
 import { handleBadResponse } from "./helpers";
 
-export const getAllUsers = async (userId) => {
+export const getContacts = async (userId) => {
 	try {
-		const response = await axios.get(`${routes.allUsersRoute}/${userId}`);
-		return response;
+		return await axios.get(`${routes.contactsRoute}/${userId}`);
 	} catch (error) {
-        console.log("Get All Users Error:", error);
+        console.log("Get Contacts Error:", error);
 		handleBadResponse(error);
 	}
 };

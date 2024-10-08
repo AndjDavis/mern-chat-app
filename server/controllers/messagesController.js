@@ -1,6 +1,5 @@
+const Message = require("../model/Message");
 const { serverErrorResponse } = require("./middleware");
-const User = require("../model/User");
-const Message = require("../models/Message");
 
 const formatMessages = (messages, from) =>
 	messages.map((msg) => ({
@@ -65,7 +64,7 @@ const postMessage = async (req, res, next) => {
 		return res.status(201).json({
 			message: "Message added successfully.",
 			success: true,
-			message: newMessage,
+			msg: newMessage,
 		});
 	} catch (error) {
 		return serverErrorResponse(res, error, "postMessage", 400);

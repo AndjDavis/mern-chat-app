@@ -5,7 +5,7 @@ import { handleBadResponse } from "./helpers";
 // Post?
 export const fetchMessages = async ({ userId, chatId }) => {
 	try {
-		const response = await axios.get(routes.recieveMessageRoute, {
+		const response = await axios.get(routes.messageRoute, {
 			from: userId,
 			to: chatId,
 		});
@@ -17,7 +17,7 @@ export const fetchMessages = async ({ userId, chatId }) => {
 
 export const postMessage = async ({ userId, chatId, message }) => {
 	try {
-		axios.post(routes.sendMessageRoute, {
+		axios.post(routes.messageRoute, {
 			from: userId,
 			to: chatId,
 			message: message,

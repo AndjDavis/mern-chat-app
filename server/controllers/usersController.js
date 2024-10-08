@@ -1,7 +1,7 @@
 const { serverErrorResponse } = require("./middleware");
 const User = require("../model/User");
 
-const getAllUsers = async (req, res, next) => {
+const getContacts = async (req, res, next) => {
 	try {
 		const users = await User.find({ _id: { $ne: req.params.id } }).select([
 			"email",
@@ -68,5 +68,5 @@ const setAvatar = async (req, res, next) => {
 
 module.exports = {
 	setAvatar: setAvatar,
-	getUsers: getAllUsers,
+	getContacts: getContacts,
 };
