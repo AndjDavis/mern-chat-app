@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { toastOptions } from "../utils/constants";
-import { Container, Button, Title } from "../styles/styles";
+import { Container, Button, TitleWrapper } from "../styles/styles";
 import AvatarList from "../components/AvatarList";
 import Loader from "../components/Loader";
 import useRedirectIfNotLoggedIn from "../hooks/useRedirectIfNotLoggedIn";
@@ -93,19 +93,18 @@ export default function Profile() {
 			</Container>
 		);
 	}
+
 	return (
 		<Container>
-			<Title>
+			<TitleWrapper>
 				<h1>Pick an Avatar as your profile picture</h1>
-			</Title>
+			</TitleWrapper>
 			<AvatarList
 				avatarList={avatars}
 				selectedAvatarIndex={selectedAvatarIndex}
 				onClick={setSelectedAvatarIndex}
 			/>
-			<Button onClick={setProfilePicture}>
-				Set as Profile Picture
-			</Button>
+			<Button onClick={setProfilePicture}>Set as Profile Picture</Button>
 			<ToastContainer />
 		</Container>
 	);

@@ -19,6 +19,7 @@ export default function Home() {
 	const socket = useRef();
 	const [contacts, setContacts] = useState([]);
 	const [currentChat, setCurrentChat] = useState(undefined);
+	const [user, setUser] = useState({});
 
 	const handleChatChange = (chat) => {
 		setCurrentChat(chat);
@@ -39,7 +40,7 @@ export default function Home() {
 				else {
 					socket.current = io(routes.host);
 					socket.current.emit("add-user", user._id);
-
+					setUser(user);
 					const { data } = await getAllUsers(user._id);
 					if (data?.success && data?.users) {
 						setContacts(data.users);
@@ -58,6 +59,7 @@ export default function Home() {
 		<Container>
 			<Card>
 				<Contacts
+					user={user}
 					contacts={contacts}
 					changeChat={handleChatChange}
 				/>
