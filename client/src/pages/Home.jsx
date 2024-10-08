@@ -1,32 +1,30 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { io } from "socket.io-client";
 
-import routes from "../utils/routes";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
 import useRedirectIfNotLoggedIn from "../hooks/useRedirectIfNotLoggedIn";
-import { getAllUsers } from "../services/userService";
 import { Card, Container as BaseContainer } from "../styles/styles";
+import { socketChannels } from "../utils/constants";
+import routes from "../utils/routes";
 
 export default function Home() {
 	useRedirectIfNotLoggedIn();
-
 	const navigate = useNavigate();
 	const socket = useRef();
-	const [contacts, setContacts] = useState([]);
+
 	const [currentChat, setCurrentChat] = useState(undefined);
-	const [user, setUser] = useState({});
+	const [currentUser, setCurrentUser] = useState({});
 
 	const handleChatChange = (chat) => {
 		setCurrentChat(chat);
 	};
 
 	useEffect(() => {
-		const fetchAllUsers = async () => {
+		const getUserOffLocalStorage = async () => {
 			try {
 				const user = await JSON.parse(
 					localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
@@ -37,38 +35,36 @@ export default function Home() {
 				}
 
 				if (!user.avatarImage) navigate("/profile");
-				else {
-					socket.current = io(routes.host);
-					socket.current.emit("add-user", user._id);
-					setUser(user);
-					const { data } = await getAllUsers(user._id);
-					if (data?.success && data?.users) {
-						setContacts(data.users);
-					}
-				}
+				else setCurrentUser(user);
 			} catch (error) {
 				console.log("Fetching all users error: ", error);
 			}
 		};
 
-		fetchAllUsers();
-		console.log("Chat UseEffect being called...");
+		getUserOffLocalStorage();
 	}, [navigate]);
+
+	useEffect(() => {
+		if (currentUser?._id) {
+			socket.current = io(routes.host);
+			socket.current.emit(socketChannels.add, currentUser._id);
+		}
+	}, [currentUser]);
 
 	return (
 		<Container>
 			<Card>
 				<Contacts
-					user={user}
-					contacts={contacts}
+					user={currentUser}
 					changeChat={handleChatChange}
 				/>
 				{currentChat === undefined ? (
-					<Welcome />
+					<Welcome user={currentUser} />
 				) : (
 					<ChatContainer
 						currentChat={currentChat}
 						socket={socket}
+						user={currentUser}
 					/>
 				)}
 			</Card>
