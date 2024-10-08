@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Chat from "./pages/Chat";
+import Profile from "./pages/Profile";
 
 export default function App() {
 	return (
@@ -18,8 +19,8 @@ export default function App() {
 					element={<Login />}
 				/>
 				<Route
-					path="/chat"
-					element={<Chat />}
+					path="/profile"
+					element={<Profile />}
 				/>
 				<Route
 					path="/"
