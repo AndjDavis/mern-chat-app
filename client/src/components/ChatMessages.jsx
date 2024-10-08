@@ -2,8 +2,9 @@ import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 // TODO: Figure out key
-export default function ChatMessages({ messages = [] }) {
+export default function ChatMessages({ currentChat, user, messages }) {
 	const scrollRef = useRef();
+
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
