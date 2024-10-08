@@ -2,9 +2,11 @@ import styled from "styled-components";
 
 export const AvatarContainer = styled.div.attrs((props) => ({
 	height: props.height || "3rem",
+	$maxis: props.$maxis || "auto",
 }))`
 	.avatar img {
 		height: ${(props) => props.height};
+		max-inline-size: ${(props) => props.$maxis}
 	}
 `;
 
