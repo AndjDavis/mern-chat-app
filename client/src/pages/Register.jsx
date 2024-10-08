@@ -4,13 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import FormLogo from "../components/FormLogo";
-import {
-	StyledContainer,
-	StyledForm,
-	StyledInput,
-	StyledSpan,
-} from "../styles/form-styles";
-import { SubmitButton } from "../styles/styles";
+import { Button, Container, Form, Input, Span } from "../styles/styles";
 import { toastOptions } from "../utils/constants";
 import { registerNewUser } from "../services/authService";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
@@ -80,10 +74,10 @@ export default function Register() {
 
 	return (
 		<>
-			<StyledContainer>
-				<StyledForm onSubmit={handleSubmit}>
+			<Container>
+				<Form onSubmit={handleSubmit}>
 					<FormLogo />
-					<StyledInput
+					<Input
 						type="text"
 						required
 						minLength={usernameMinLength}
@@ -92,7 +86,7 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.username}
 					/>
-					<StyledInput
+					<Input
 						type="email"
 						required
 						placeholder="Email"
@@ -100,7 +94,7 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.email}
 					/>
-					<StyledInput
+					<Input
 						type="password"
 						required
 						minLength={pwMinLength}
@@ -109,7 +103,7 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.password}
 					/>
-					<StyledInput
+					<Input
 						type="password"
 						required
 						minLength={pwMinLength}
@@ -118,13 +112,13 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.confirmPassword}
 					/>
-					<SubmitButton type="submit">Create New User</SubmitButton>
-					<StyledSpan>
+					<Button type="submit">Create New User</Button>
+					<Span>
 						Already Have an account?
 						<Link to="/login"> Login </Link>
-					</StyledSpan>
-				</StyledForm>
-			</StyledContainer>
+					</Span>
+				</Form>
+			</Container>
 			<ToastContainer />
 		</>
 	);

@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { toastOptions } from "../utils/constants";
-import { Container, SubmitButton, Title } from "../styles/styles";
+import { Container, Button, Title } from "../styles/styles";
 import AvatarList from "../components/AvatarList";
 import Loader from "../components/Loader";
 import useRedirectIfNotLoggedIn from "../hooks/useRedirectIfNotLoggedIn";
@@ -17,6 +17,7 @@ export default function Profile() {
 	const [avatars, setAvatars] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(undefined);
+
 	const setProfilePicture = async () => {
 		if (selectedAvatarIndex === undefined) {
 			toast.error("Please select an avatar...", toastOptions);
@@ -102,9 +103,9 @@ export default function Profile() {
 				selectedAvatarIndex={selectedAvatarIndex}
 				onClick={setSelectedAvatarIndex}
 			/>
-			<SubmitButton onClick={setProfilePicture}>
+			<Button onClick={setProfilePicture}>
 				Set as Profile Picture
-			</SubmitButton>
+			</Button>
 			<ToastContainer />
 		</Container>
 	);

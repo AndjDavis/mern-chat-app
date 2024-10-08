@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import styled from "styled-components";
 
 import FormLogo from "../components/FormLogo";
 import {
-	StyledContainer,
-	StyledForm,
-	StyledInput,
-	StyledSpan,
-} from "../styles/form-styles";
-import { SubmitButton } from "../styles/styles";
+	Button,
+	Container as BaseContainer,
+	Form,
+	Input,
+	Span,
+} from "../styles/styles";
 import { loginUser } from "../services/authService";
 import { toastOptions } from "../utils/constants";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
@@ -77,10 +78,10 @@ export default function Login() {
 
 	return (
 		<>
-			<StyledContainer>
-				<StyledForm onSubmit={handleSubmit}>
+			<Container>
+				<Form onSubmit={handleSubmit}>
 					<FormLogo />
-					<StyledInput
+					<Input
 						type="text"
 						required
 						placeholder="Username"
@@ -88,7 +89,7 @@ export default function Login() {
 						onChange={handleChange}
 						value={values.username}
 					/>
-					<StyledInput
+					<Input
 						type="password"
 						required
 						placeholder="Password"
@@ -96,13 +97,17 @@ export default function Login() {
 						onChange={handleChange}
 						value={values.password}
 					/>
-					<SubmitButton type="submit">Log In</SubmitButton>
-					<StyledSpan>
+					<Button type="submit">Log In</Button>
+					<Span>
 						Don't have an account ? <Link to="/register">Create One.</Link>
-					</StyledSpan>
-				</StyledForm>
-			</StyledContainer>
+					</Span>
+				</Form>
+			</Container>
 			<ToastContainer />
 		</>
 	);
 }
+
+const Container = styled(BaseContainer)`
+	gap: 1rem;
+`;
