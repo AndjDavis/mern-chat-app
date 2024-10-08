@@ -30,3 +30,14 @@ export const registerNewUser = async ({ email, password, username }) => {
 		return handleBadResponse(error);
 	}
 };
+
+export const logUserOut = async (userId) => {
+	try {
+		const response = await axios.get(`${routes.logoutRoute}/${userId}`);
+		return response
+	} catch (error) {
+		console.log("Logging Out User Error:", error);
+		return handleBadResponse(error);
+	}
+	}
+}
