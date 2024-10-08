@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import FormLogo from "../components/FormLogo";
+import Logo from "../components/Logo";
 import { Button, Container, Form, Input, Span } from "../styles/styles";
 import { toastOptions } from "../utils/constants";
 import { registerNewUser } from "../services/authService";
@@ -76,7 +76,7 @@ export default function Register() {
 		<>
 			<Container>
 				<Form onSubmit={handleSubmit}>
-					<FormLogo />
+					<Logo />
 					<Input
 						type="text"
 						required

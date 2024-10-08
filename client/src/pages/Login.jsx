@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 
-import FormLogo from "../components/FormLogo";
+import Logo from "../components/Logo";
 import {
 	Button,
 	Container as BaseContainer,
@@ -80,7 +80,7 @@ export default function Login() {
 		<>
 			<Container>
 				<Form onSubmit={handleSubmit}>
-					<FormLogo />
+					<Logo />
 					<Input
 						type="text"
 						required

@@ -26,36 +26,6 @@ export const Card = styled.div`
 	}
 `;
 
-export const ChatMessages = styled.div`
-	padding: 1rem 2rem;
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	overflow: auto;
-	&::-webkit-scrollbar {
-		width: 0.2rem;
-		&-thumb {
-			background-color: #ffffff39;
-			width: 0.1rem;
-			border-radius: 1rem;
-		}
-	}
-	.message {
-		display: flex;
-		align-items: center;
-		.content {
-			max-width: 40%;
-			overflow-wrap: break-word;
-			padding: 1rem;
-			font-size: 1.1rem;
-			border-radius: 1rem;
-			color: #d1d1d1;
-			@media screen and (min-width: 720px) and (max-width: 1080px) {
-				max-width: 70%;
-			}
-		}
-`;
-
 export const Container = styled.div`
 	display: flex;
 	justify-content: center;
@@ -122,9 +92,8 @@ export const Span = styled.span`
 	}
 `;
 
-export const Title = styled.div`
-	h1 {
+export const TitleWrapper = styled.div`
+	h1, h2, h3 {
 		color: white;
 	}
 `;
-
