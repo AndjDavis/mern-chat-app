@@ -23,7 +23,7 @@ export default function Profile() {
 			return;
 		}
 
-		const { user } = await JSON.parse(
+		const user = await JSON.parse(
 			localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
 		);
 
@@ -42,8 +42,8 @@ export default function Profile() {
 		}
 
 		try {
-			const { data, status } = await setProfileAvatar(selectedAvatar, user._id);
-			if (data.isSet) {
+			const { data } = await setProfileAvatar(selectedAvatar, user._id);
+			if (data?.success && data?.isSet) {
 				user.avatarImage = data.image;
 				localStorage.setItem(
 					process.env.REACT_APP_LOCALHOST_KEY,
@@ -51,10 +51,13 @@ export default function Profile() {
 				);
 				navigate("/");
 			} else {
-				toast.error("Error setting avatar. Please try again.", toastOptions);
+				const message = data?.message
+					? data.message
+					: "Error setting avatar image to your profile. Please try again.";
+				toast.error(message, toastOptions);
 			}
 		} catch (error) {
-			console.log("Register Form Error: ", error);
+			console.log("Profile SetAvatar Error: ", error);
 			toast.error(
 				"An server error occurred while setting the avatar",
 				toastOptions
