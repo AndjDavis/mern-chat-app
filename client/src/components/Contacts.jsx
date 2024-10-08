@@ -1,15 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import Logo from "./Logo";
 import { TitleWrapper, AvatarContainer } from "../styles/styles";
+import { getContacts } from "../services/userService";
+import Logo from "./Logo";
 
-export default function Contacts({ contacts, changeChat, user }) {
+export default function Contacts({ changeChat, user }) {
 	const [currentSelectedIndex, setCurrentSelectedIndex] = useState(undefined);
+	const [contacts, setContacts] = useState([]);
+	const userId = user?._id || null;
+
 	const changeCurrentChat = (index, contact) => {
-		setCurrentSelectedIndex(index);
 		changeChat(contact);
+		setCurrentSelectedIndex(index);
 	};
+
+	useEffect(() => {
+		const fetchContacts = async () => {
+			try {
+				const { data, status } = await getContacts(userId);
+				if (status === 200 && data?.success) {
+					setContacts(data.users);
+				}
+			} catch (error) {
+				console.log("Fetching all contacts failed: ", error);
+			}
+		};
+
+		if (userId) {
+			fetchContacts();
+		}
+	}, [userId]);
 
 	return (
 		<>
@@ -21,7 +42,10 @@ export default function Contacts({ contacts, changeChat, user }) {
 						currentSelectedIndex={currentSelectedIndex}
 						onClick={changeCurrentChat}
 					/>
-					<UserCard>
+					<UserCard
+						height="4rem"
+						$maxis="100%"
+					>
 						<div className="avatar">
 							<img
 								src={`data:image/svg+xml;base64,${user.avatarImage}`}
@@ -43,6 +67,7 @@ const ContactList = ({ contacts, currentSelectedIndex, onClick }) => {
 		<ListContainer>
 			{contacts.map((contact, index) => (
 				<ContactDetail
+					key={contact._id}
 					contact={contact}
 					index={index}
 					currentSelectedIndex={currentSelectedIndex}
@@ -56,25 +81,27 @@ const ContactList = ({ contacts, currentSelectedIndex, onClick }) => {
 const ContactDetail = ({ contact, currentSelectedIndex, onClick, index }) => {
 	return (
 		<ContactCard
-			key={contact._id}
 			className={index === currentSelectedIndex ? "selected" : ""}
 			onClick={() => onClick(index, contact)}
 		>
 			<div className="avatar">
 				<img
 					src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-					alt=""
+					alt="contact-avatar"
 				/>
 			</div>
-			<div className="username">
+			<TitleWrapper>
 				<h3>{contact.username}</h3>
-			</div>
+			</TitleWrapper>
 		</ContactCard>
 	);
 };
 
-const ContactCard = styled.div`
+const ContactCard = styled(AvatarContainer)`
+	display: flex;
+	align-items: center;
 	background-color: #ffffff34;
+	width: 90%;
 	min-height: 5rem;
 	cursor: pointer;
 	border-radius: 0.2rem;

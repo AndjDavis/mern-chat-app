@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import Logout from "./Logout";
+
 import { fetchMessages, postMessage } from "../services/messageService";
 import { TitleWrapper, AvatarContainer } from "../styles/styles";
 import { socketChannels } from "../utils/constants";
