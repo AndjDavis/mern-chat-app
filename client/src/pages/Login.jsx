@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import FormLogo from "../components/FormLogo";
 import {
-	StyledButton,
 	StyledContainer,
 	StyledForm,
 	StyledInput,
 	StyledSpan,
 } from "../styles/form-styles";
+import { SubmitButton } from "../styles/styles";
 import { loginUser } from "../services/authService";
 import { toastOptions } from "../utils/constants";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
@@ -96,7 +96,7 @@ export default function Login() {
 						onChange={handleChange}
 						value={values.password}
 					/>
-					<StyledButton type="submit">Log In</StyledButton>
+					<SubmitButton type="submit">Log In</SubmitButton>
 					<StyledSpan>
 						Don't have an account ? <Link to="/register">Create One.</Link>
 					</StyledSpan>
