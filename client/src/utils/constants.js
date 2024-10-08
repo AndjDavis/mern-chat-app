@@ -5,3 +5,9 @@ export const toastOptions = {
 	draggable: true,
 	theme: "dark",
 };
+
+export const socketChannels = {
+	send: "send-msg",
+	add: "add-user",
+	received: "msg-recieve",
+};

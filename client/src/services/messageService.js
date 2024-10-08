@@ -6,8 +6,7 @@ import { handleBadResponse } from "./helpers";
 export const fetchMessages = async ({ userId, chatId }) => {
 	try {
 		const response = await axios.get(routes.messageRoute, {
-			from: userId,
-			to: chatId,
+			params: { from: userId, to: chatId },
 		});
 		return response;
 	} catch (error) {
