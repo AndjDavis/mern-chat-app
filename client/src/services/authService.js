@@ -1,22 +1,6 @@
 import axios from "axios";
 import routes from "../utils/routes";
-
-const handleBadResponse = (error) => {
-	const errorResponse = {
-		status: error?.status,
-		data: {
-			message: "An unexpected error occurred. Please try again later.",
-			success: false,
-		}
-	};
-
-	if (error?.response && error.response?.data) {
-		errorResponse.data.message = error.response.data.message;
-		errorResponse.data.success = error.response.data.success;
-	}
-
-	return errorResponse;
-};
+import { handleBadResponse } from "./helpers";
 
 export const loginUser = async ({ username, password }) => {
 	try {
