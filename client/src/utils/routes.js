@@ -4,8 +4,8 @@ const logoutRoute = `${host}/api/auth/logout`;
 const registerRoute = `${host}/api/auth/register`;
 const allUsersRoute = `${host}/api/users/all-users`;
 const setAvatarRoute = `${host}/api/users/setavatar`;
-const recieveMessageRoute = `${host}/api/messages/getmsg`;
-const sendMessageRoute = `${host}/api/messages/addmsg`;
+const recieveMessageRoute = `${host}/api/messages/get-messages`;
+const sendMessageRoute = `${host}/api/messages/add-message`;
 
 const fetchAvatars = "https://api.multiavatar.com";
 

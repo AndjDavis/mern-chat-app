@@ -15,6 +15,7 @@ const UserSchema = new Schema({
 		required: true,
 		min: 8,
 		max: 20,
+		select: false,
 	},
 	email: {
 		type: String,
@@ -29,5 +30,11 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.isAvatarImageSet = utils.isAvatarImageSet;
+UserSchema.set("toJSON", {
+	transform: function (doc, ret, options) {
+		delete ret.password; // Remove password field
+		return ret;
+	},
+});
 
 module.exports = mongoose.model("User", UserSchema);
