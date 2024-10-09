@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { io } from "socket.io-client";
 
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
@@ -7,18 +8,62 @@ import Logout from "./Logout";
 
 import { fetchMessages, postMessage } from "../services/messageService";
 import { TitleWrapper, AvatarContainer } from "../styles/styles";
-import { socketChannels } from "../utils/constants";
+import { chatEvents } from "../utils/constants";
+import routes from "../utils/routes";
 
-export default function ChatContainer({ currentChat, user, socket }) {
+export default function ChatContainer({ currentChat, user }) {
+	const socket = useRef();
+	const socketIsConfigured = useRef(false);
+
 	const [messages, setMessages] = useState([]);
-	const [arrivalMessage, setArrivalMessage] = useState(null);
+
+	const handleSendMessage = async (message) => {
+		const { _id: currentChatId } = currentChat;
+		const { _id: userId } = user;
+		// TODO: Something better than a early return...
+		if (!userId || !currentChatId) return;
+		try {
+			const { data, status } = await postMessage({
+				sendTo: currentChatId,
+				from: userId,
+				message,
+			});
+
+			if (status === 201 && data?.success) {
+				const { msg: newMessage } = data;
+				socket.current.emit(chatEvents.send, {
+					to: currentChatId,
+					from: userId,
+					id: newMessage.id,
+					message,
+				});
+				setMessages((prevMessages) => [...prevMessages, newMessage]);
+			}
+		} catch (error) {
+			console.log("Error sending new message: ", error);
+		}
+	};
+
+	const handleIncomingSocketMessages = ({ message, id }) => {
+		const incomingMsg = { fromSelf: false, message, id };
+		setMessages((prevMessages) => [...prevMessages, incomingMsg]);
+	};
+
+	useEffect(() => {
+		if (!socketIsConfigured.current) {
+			socket.current = io(routes.host);
+			socket.current.emit(chatEvents.addUser, user._id);
+			socket.current.on(chatEvents.received, handleIncomingSocketMessages);
+			socketIsConfigured.current = true;
+		}
+	}, []);
 
 	useEffect(() => {
 		const handleGetMessages = async () => {
 			try {
 				const { data, status } = await fetchMessages({
-					userId: user._id,
-					chatId: currentChat._id,
+					sentTo: currentChat._id,
+					from: user._id,
 				});
 
 				if (status === 200 && data?.success) {
@@ -32,45 +77,7 @@ export default function ChatContainer({ currentChat, user, socket }) {
 		if (user?._id && currentChat?._id) {
 			handleGetMessages();
 		}
-	}, [user, currentChat]);
-
-	const handleSendMessage = async (message) => {
-		if (!user?._id || !currentChat?._id) return;
-		try {
-			socket.current.emit(socketChannels.send, {
-				to: currentChat._id,
-				from: user._id,
-				message,
-			});
-
-			const { data, status } = await postMessage({
-				userId: user._id,
-				chatId: currentChat._id,
-				message,
-			});
-
-			if (status === 201 && data?.success) {
-				setMessages((prevMessages) => {
-					const { msg } = data;
-					return [...prevMessages, msg];
-				});
-			}
-		} catch (error) {
-			console.log("Error sending new message: ", error);
-		}
-	};
-
-	useEffect(() => {
-		if (socket?.current) {
-			socket.current.on(socketChannels.received, (msg) => {
-				setArrivalMessage({ fromSelf: false, message: msg });
-			});
-		}
-	}, [socket]);
-
-	useEffect(() => {
-		arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-	}, [arrivalMessage]);
+	}, [currentChat]);
 
 	return (
 		<Container>
@@ -91,10 +98,7 @@ export default function ChatContainer({ currentChat, user, socket }) {
 					currentChat={currentChat}
 				/>
 			</Header>
-			<ChatMessages
-				user={user}
-				messages={messages}
-			/>
+			<ChatMessages messages={messages} />
 			<ChatInput handleSendMsg={handleSendMessage} />
 		</Container>
 	);
