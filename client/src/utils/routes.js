@@ -11,6 +11,7 @@ const fetchAvatars = "https://api.multiavatar.com";
 const routes = {
 	contactsRoute,
 	fetchAvatars,
+	host,
 	loginRoute,
 	logoutRoute,
 	messageRoute,

@@ -6,8 +6,10 @@ export const toastOptions = {
 	theme: "dark",
 };
 
-export const socketChannels = {
-	send: "send-msg",
-	add: "add-user",
-	received: "msg-recieve",
+export const chatEvents = {
+	send: "sendMessage",
+	addUser: "addUser",
+	received: "receiveMessage",
+	connection: "connection",
+	disconnect: "disconnect",
 };

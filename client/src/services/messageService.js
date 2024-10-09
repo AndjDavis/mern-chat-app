@@ -2,11 +2,10 @@ import axios from "axios";
 import routes from "../utils/routes";
 import { handleBadResponse } from "./helpers";
 
-// Post?
-export const fetchMessages = async ({ userId, chatId }) => {
+export const fetchMessages = async ({ sentTo, from }) => {
 	try {
 		const response = await axios.get(routes.messageRoute, {
-			params: { from: userId, to: chatId },
+			params: { from, to: sentTo },
 		});
 		return response;
 	} catch (error) {
@@ -14,12 +13,12 @@ export const fetchMessages = async ({ userId, chatId }) => {
 	}
 };
 
-export const postMessage = async ({ userId, chatId, message }) => {
+export const postMessage = async ({ sendTo, from, message }) => {
 	try {
-		axios.post(routes.messageRoute, {
-			from: userId,
-			to: chatId,
-			message: message,
+		return await axios.post(routes.messageRoute, {
+			from: from,
+			to: sendTo,
+			message,
 		});
 	} catch (error) {
 		return handleBadResponse(error);
