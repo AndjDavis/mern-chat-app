@@ -22,7 +22,10 @@ const loginUser = async (req, res) => {
 		}
 
 		const { password: _, ...userWithoutPassword } = user.toObject();
-		return res.status(200).json({ success: true, user: userWithoutPassword });
+		return res.status(200).json({
+			success: true,
+			user: userWithoutPassword,
+		});
 	} catch (error) {
 		return serverErrorResponse(res, error, "login");
 	}

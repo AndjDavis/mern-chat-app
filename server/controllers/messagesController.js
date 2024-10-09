@@ -5,6 +5,7 @@ const formatMessages = (messages, from) =>
 	messages.map((msg) => ({
 		fromSelf: msg.sender.toString() === from.toString(),
 		message: msg.message.text,
+		id: msg._id,
 	}));
 
 const getMessages = async (req, res, next) => {
