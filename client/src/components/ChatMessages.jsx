@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-// TODO: Figure out key
-export default function ChatMessages({ currentChat, user, messages }) {
+export default function ChatMessages({ messages }) {
 	const scrollRef = useRef();
 
 	useEffect(() => {
@@ -14,7 +13,7 @@ export default function ChatMessages({ currentChat, user, messages }) {
 			{messages.map((message, index) => (
 				<Message
 					message={message}
-					key={index}
+					key={message.id}
 					scrollRef={scrollRef}
 				/>
 			))}

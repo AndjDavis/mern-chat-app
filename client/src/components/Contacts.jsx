@@ -5,10 +5,10 @@ import { TitleWrapper, AvatarContainer } from "../styles/styles";
 import { getContacts } from "../services/userService";
 import Logo from "./Logo";
 
+// TODO: I'd like to switch currentSelectedIndex to a contact._id;
 export default function Contacts({ changeChat, user }) {
 	const [currentSelectedIndex, setCurrentSelectedIndex] = useState(undefined);
 	const [contacts, setContacts] = useState([]);
-	const userId = user?._id || null;
 
 	const changeCurrentChat = (index, contact) => {
 		changeChat(contact);
@@ -18,7 +18,7 @@ export default function Contacts({ changeChat, user }) {
 	useEffect(() => {
 		const fetchContacts = async () => {
 			try {
-				const { data, status } = await getContacts(userId);
+				const { data, status } = await getContacts(user._id);
 				if (status === 200 && data?.success) {
 					setContacts(data.users);
 				}
@@ -27,10 +27,10 @@ export default function Contacts({ changeChat, user }) {
 			}
 		};
 
-		if (userId) {
+		if (user?._id) {
 			fetchContacts();
 		}
-	}, [userId]);
+	}, [user]);
 
 	return (
 		<>
@@ -87,7 +87,7 @@ const ContactDetail = ({ contact, currentSelectedIndex, onClick, index }) => {
 			<div className="avatar">
 				<img
 					src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-					alt="contact-avatar"
+					alt=""
 				/>
 			</div>
 			<TitleWrapper>
