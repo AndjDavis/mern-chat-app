@@ -5,7 +5,7 @@ import Robot from "../assets/robot.gif";
 import Logout from "./Logout";
 import { FlexBox } from "../styles/styles";
 
-export default function Welcome({ user = {} }) {
+export default function Welcome({ user }) {
 	const username = user?.username || "User";
 
 	return (

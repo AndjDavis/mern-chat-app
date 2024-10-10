@@ -5,31 +5,22 @@ import { TitleWrapper, AvatarContainer } from "../styles/styles";
 import { getContacts } from "../services/userService";
 import Logo from "./Logo";
 
-// TODO: I'd like to switch currentSelectedIndex to a contact._id;
-export default function Contacts({ changeChat, user }) {
-	const [currentSelectedIndex, setCurrentSelectedIndex] = useState(undefined);
+export default function Contacts({ changeConversation, chatRecipient, user }) {
 	const [contacts, setContacts] = useState([]);
-
-	const changeCurrentChat = (index, contact) => {
-		changeChat(contact);
-		setCurrentSelectedIndex(index);
-	};
 
 	useEffect(() => {
 		const fetchContacts = async () => {
 			try {
 				const { data, status } = await getContacts(user._id);
 				if (status === 200 && data?.success) {
-					setContacts(data.users);
+					setContacts(data.contacts);
 				}
 			} catch (error) {
 				console.log("Fetching all contacts failed: ", error);
 			}
 		};
 
-		if (user?._id) {
-			fetchContacts();
-		}
+		if (user?._id) fetchContacts();
 	}, [user]);
 
 	return (
@@ -39,8 +30,8 @@ export default function Contacts({ changeChat, user }) {
 					<Logo height="2rem" />
 					<ContactList
 						contacts={contacts}
-						currentSelectedIndex={currentSelectedIndex}
-						onClick={changeCurrentChat}
+						chatRecipient={chatRecipient}
+						onClick={changeConversation}
 					/>
 					<UserCard
 						height="4rem"
@@ -62,15 +53,14 @@ export default function Contacts({ changeChat, user }) {
 	);
 }
 
-const ContactList = ({ contacts, currentSelectedIndex, onClick }) => {
+const ContactList = ({ contacts, chatRecipient, onClick }) => {
 	return (
 		<ListContainer>
-			{contacts.map((contact, index) => (
+			{contacts.map((contact) => (
 				<ContactDetail
 					key={contact._id}
 					contact={contact}
-					index={index}
-					currentSelectedIndex={currentSelectedIndex}
+					chatRecipient={chatRecipient}
 					onClick={onClick}
 				/>
 			))}
@@ -78,11 +68,12 @@ const ContactList = ({ contacts, currentSelectedIndex, onClick }) => {
 	);
 };
 
-const ContactDetail = ({ contact, currentSelectedIndex, onClick, index }) => {
+const ContactDetail = ({ contact, chatRecipient, onClick }) => {
+	const isActiveChatRecipient = chatRecipient?._id === contact._id;
 	return (
 		<ContactCard
-			className={index === currentSelectedIndex ? "selected" : ""}
-			onClick={() => onClick(index, contact)}
+			className={isActiveChatRecipient ? "selected" : ""}
+			onClick={() => onClick(contact)}
 		>
 			<div className="avatar">
 				<img

@@ -10,7 +10,7 @@ export default function ChatMessages({ messages }) {
 
 	return (
 		<Container>
-			{messages.map((message, index) => (
+			{messages.map((message) => (
 				<Message
 					message={message}
 					key={message.id}

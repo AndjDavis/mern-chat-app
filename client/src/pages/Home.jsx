@@ -13,11 +13,12 @@ export default function Home() {
 	useRedirectIfNotLoggedIn();
 	const navigate = useNavigate();
 
-	const [currentChat, setCurrentChat] = useState(undefined);
+	const [chatRecipient, setChatRecipient] = useState();
+	// TODO: Pull this of a global store.
 	const [currentUser, setCurrentUser] = useState({});
 
-	const handleChatChange = (chat) => {
-		setCurrentChat(chat);
+	const handleChangeConversation = (newChatRecipient) => {
+		setChatRecipient(newChatRecipient);
 	};
 
 	useEffect(() => {
@@ -41,14 +42,15 @@ export default function Home() {
 		<Container>
 			<Card>
 				<Contacts
-					changeChat={handleChatChange}
+					chatRecipient={chatRecipient}
+					changeConversation={handleChangeConversation}
 					user={currentUser}
 				/>
-				{currentChat === undefined ? (
+				{chatRecipient === undefined ? (
 					<Welcome user={currentUser} />
 				) : (
 					<ChatContainer
-						currentChat={currentChat}
+						chatRecipient={chatRecipient}
 						user={currentUser}
 					/>
 				)}
