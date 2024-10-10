@@ -30,8 +30,12 @@ const initializeSocket = (server) => {
 		socket.on(chatEvents.send, (data) => {
 			const sendUserSocket = global.onlineUsers.get(data.to);
 			if (sendUserSocket) {
-				const { id, message } = data;
-				socket.to(sendUserSocket).emit(chatEvents.received, { id, message });
+				const { id, message: text, from } = data;
+				socket.to(sendUserSocket).emit(chatEvents.received, {
+					id,
+					message: { text },
+					author: from,
+				});
 			}
 		});
 

@@ -7,6 +7,6 @@ const {
 const router = express.Router();
 
 router.post("/", postMessage);
-router.get("/", getMessages);
+router.get("/:id", getMessages);
 
 module.exports = router;
