@@ -1,25 +1,45 @@
 import axios from "axios";
+
 import routes from "../utils/routes";
 import { handleBadResponse } from "./helpers";
+import { formatChatMessage, formatMessages } from "../utils/lib";
 
-export const fetchMessages = async ({ sentTo, from }) => {
+export const fetchMessages = async ({ recipientId, authorId }) => {
 	try {
-		const response = await axios.get(routes.messageRoute, {
-			params: { from, to: sentTo },
+		const url = `${routes.messageRoute}/${authorId}`;
+		const { data, status } = await axios.get(url, {
+			params: { recipient: recipientId },
 		});
-		return response;
+
+		const updatedData = { ...data };
+		if (data?.messages && data?.success) {
+			updatedData.messages = formatMessages([...data.messages], authorId);
+		}
+		return {
+			data: updatedData,
+			status,
+		};
 	} catch (error) {
 		return handleBadResponse(error);
 	}
 };
 
-export const postMessage = async ({ sendTo, from, message }) => {
+export const postMessage = async ({ recipientId, authorId, message }) => {
 	try {
-		return await axios.post(routes.messageRoute, {
-			from: from,
-			to: sendTo,
+		const { data, status } = await axios.post(routes.messageRoute, {
+			author: authorId,
+			recipient: recipientId,
 			message,
 		});
+
+		const updatedData = { ...data };
+		if (data?.msg && data?.success) {
+			updatedData.msg = formatChatMessage(data.msg, authorId);
+		}
+		return {
+			data: updatedData,
+			status,
+		};
 	} catch (error) {
 		return handleBadResponse(error);
 	}

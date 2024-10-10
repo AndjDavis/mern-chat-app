@@ -8,62 +8,64 @@ import Logout from "./Logout";
 
 import { fetchMessages, postMessage } from "../services/messageService";
 import { TitleWrapper, AvatarContainer } from "../styles/styles";
+import { formatChatMessage } from "../utils/lib";
 import { chatEvents } from "../utils/constants";
 import routes from "../utils/routes";
 
-export default function ChatContainer({ currentChat, user }) {
+export default function ChatContainer({ chatRecipient, user }) {
 	const socket = useRef();
 	const socketIsConfigured = useRef(false);
 
 	const [messages, setMessages] = useState([]);
 
 	const handleSendMessage = async (message) => {
-		const { _id: currentChatId } = currentChat;
+		const { _id: recipientId } = chatRecipient;
 		const { _id: userId } = user;
+
 		// TODO: Something better than a early return...
-		if (!userId || !currentChatId) return;
+		if (!userId || !recipientId) return;
 		try {
 			const { data, status } = await postMessage({
-				sendTo: currentChatId,
-				from: userId,
+				recipientId: recipientId,
+				authorId: userId,
 				message,
 			});
 
 			if (status === 201 && data?.success) {
-				const { msg: newMessage } = data;
+				const { msg: newMsg } = data;
 				socket.current.emit(chatEvents.send, {
-					to: currentChatId,
+					to: recipientId,
 					from: userId,
-					id: newMessage.id,
+					id: newMsg.id,
 					message,
 				});
-				setMessages((prevMessages) => [...prevMessages, newMessage]);
+				setMessages((prevMessages) => [...prevMessages, newMsg]);
 			}
 		} catch (error) {
 			console.log("Error sending new message: ", error);
 		}
 	};
 
-	const handleIncomingSocketMessages = ({ message, id }) => {
-		const incomingMsg = { fromSelf: false, message, id };
-		setMessages((prevMessages) => [...prevMessages, incomingMsg]);
+	const handleIncomingSocketMessages = ({ message, id: _id, author }) => {
+		const chatMsg = formatChatMessage({ message, _id, author }, user._id);
+		setMessages((prevMessages) => [...prevMessages, chatMsg]);
 	};
 
 	useEffect(() => {
-		if (!socketIsConfigured.current) {
+		if (!socketIsConfigured.current && user?._id) {
 			socket.current = io(routes.host);
 			socket.current.emit(chatEvents.addUser, user._id);
 			socket.current.on(chatEvents.received, handleIncomingSocketMessages);
 			socketIsConfigured.current = true;
 		}
-	}, []);
+	}, [user]);
 
 	useEffect(() => {
 		const handleGetMessages = async () => {
 			try {
 				const { data, status } = await fetchMessages({
-					sentTo: currentChat._id,
-					from: user._id,
+					recipientId: chatRecipient._id,
+					authorId: user._id,
 				});
 
 				if (status === 200 && data?.success) {
@@ -74,10 +76,10 @@ export default function ChatContainer({ currentChat, user }) {
 			}
 		};
 
-		if (user?._id && currentChat?._id) {
+		if (chatRecipient?._id && user?._id) {
 			handleGetMessages();
 		}
-	}, [currentChat]);
+	}, [chatRecipient, user]);
 
 	return (
 		<Container>
@@ -85,18 +87,15 @@ export default function ChatContainer({ currentChat, user }) {
 				<UserCard>
 					<div className="avatar">
 						<img
-							src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
+							src={`data:image/svg+xml;base64,${chatRecipient.avatarImage}`}
 							alt="user-avatar"
 						/>
 					</div>
 					<TitleWrapper>
-						<h3>{currentChat.username}</h3>
+						<h3>{chatRecipient.username}</h3>
 					</TitleWrapper>
 				</UserCard>
-				<Logout
-					user={user}
-					currentChat={currentChat}
-				/>
+				<Logout user={user} />
 			</Header>
 			<ChatMessages messages={messages} />
 			<ChatInput handleSendMsg={handleSendMessage} />
