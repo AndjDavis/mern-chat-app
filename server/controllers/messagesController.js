@@ -1,35 +1,28 @@
 const Message = require("../model/Message");
 const { serverErrorResponse } = require("./middleware");
 
-const formatMessages = (messages, from) =>
-	messages.map((msg) => ({
-		fromSelf: msg.sender.toString() === from.toString(),
-		message: msg.message.text,
-		id: msg._id,
-	}));
-
 const getMessages = async (req, res, next) => {
 	try {
-		const { from, to } = req.query;
-		if (!from || !to) {
+		const { id: author } = req.params;
+		const { recipient } = req.query;
+
+		if (!author || !recipient) {
 			return res.status(400).json({
-				message: "Missing fields in the request body",
+				message: "Missing params in the request",
 				success: false,
 			});
 		}
 
 		const messages = await Message.find({
-			users: {
-				$all: [from, to],
-			},
+			$or: [
+				{ author: author, recipient: recipient },
+				{ author: recipient, recipient: author },
+			],
 		}).sort({ updatedAt: 1 });
 
-		const projectedMessages = formatMessages(messages, from);
-
 		return res.status(200).json({
-			messages: projectedMessages,
+			messages,
 			success: true,
-			message: "Successfully fetched messages",
 		});
 	} catch (error) {
 		return serverErrorResponse(res, error, "getMessages", 500);
@@ -38,34 +31,30 @@ const getMessages = async (req, res, next) => {
 
 const postMessage = async (req, res, next) => {
 	try {
-		const { from, to, message } = req.body;
-		if (!from || !to || !message) {
+		const { author, recipient, message } = req.body;
+		if (!author || !recipient || !message) {
 			return res.status(400).json({
 				message: "Missing fields in the request body",
 				success: false,
 			});
 		}
 
-		const data = await Message.create({
+		const newMsg = await Message.create({
 			message: { text: message },
-			users: [from, to],
-			sender: from,
+			recipient,
+			author,
 		});
 
-		if (!data) {
+		if (!newMsg) {
 			return res.status(400).json({
 				message: "Failed to add message to the database",
 				success: false,
 			});
 		}
 
-		const projectedMessage = formatMessages([data], from);
-		const newMessage = projectedMessage[0];
-
 		return res.status(201).json({
-			message: "Message added successfully.",
 			success: true,
-			msg: newMessage,
+			msg: newMsg,
 		});
 	} catch (error) {
 		return serverErrorResponse(res, error, "postMessage", 400);

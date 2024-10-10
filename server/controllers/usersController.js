@@ -3,7 +3,7 @@ const User = require("../model/User");
 
 const getContacts = async (req, res, next) => {
 	try {
-		const users = await User.find({ _id: { $ne: req.params.id } }).select([
+		const contacts = await User.find({ _id: { $ne: req.params.id } }).select([
 			"email",
 			"username",
 			"avatarImage",
@@ -12,8 +12,7 @@ const getContacts = async (req, res, next) => {
 
 		return res.status(200).json({
 			success: true,
-			message: "Successfully fetched all users...",
-			users,
+			contacts,
 		});
 	} catch (error) {
 		return serverErrorResponse(res, error, "getAllUsers", 400);
