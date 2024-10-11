@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, createContext } from "react";
+import { useContext, useEffect, useState, createContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -14,24 +14,13 @@ const AuthStatus = {
 };
 
 const defaultState = {
-	authStatus: AuthStatus.SIGNED_OUT,
+	isAuthenticated: false,
 	user: null,
 	isLoading: true,
 	error: null,
 };
 
 export const UserContext = createContext(defaultState);
-
-export const AuthIsSignedIn = ({ children }) => {
-	const { authStatus } = useContext(UserContext);
-
-	return <>{authStatus === AuthStatus.SIGNED_IN ? children : null}</>;
-};
-
-export const AuthIsNotSignedIn = ({ children }) => {
-	const { authStatus } = useContext(UserContext);
-	return <>{authStatus === AuthStatus.SIGNED_OUT ? children : null}</>;
-};
 
 const USER_STORAGE_KEY = process.env.REACT_APP_STORAGE_USER_KEY;
 
@@ -40,7 +29,6 @@ const clearLocalStorage = () => {
 };
 
 const getLocalStorageItem = (key = USER_STORAGE_KEY) => {
-	console.log("getLocalStorageItem", key);
 	return JSON.parse(localStorage.getItem(key));
 };
 
@@ -55,9 +43,11 @@ const removeLocalStorageItem = (key = USER_STORAGE_KEY) => {
 const UserProvider = ({ children }) => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(defaultState.isLoading);
-	const [authStatus, setAuthStatus] = useState(defaultState.authStatus);
 	const [user, setUser] = useState(defaultState.user);
 	const [error, setError] = useState(defaultState.error);
+	const [isAuthenticated, setIsAuthenticated] = useState(
+		defaultState.isAuthenticated
+	);
 
 	const signIn = async (credentials) => {
 		setError(null);
@@ -81,7 +71,7 @@ const UserProvider = ({ children }) => {
 			await logUserOut(user._id);
 			clearLocalStorage();
 			setUser(null);
-			setAuthStatus(AuthStatus.SIGNED_OUT);
+			setIsAuthenticated(false);
 			navigate("/login");
 		} catch (error) {
 			setError(error.message);
@@ -107,7 +97,7 @@ const UserProvider = ({ children }) => {
 	const handleSuccessfulAuth = (user) => {
 		setUser(user);
 		setLocalStorageItem(user);
-		setAuthStatus(AuthStatus.SIGNED_IN);
+		setIsAuthenticated(AuthStatus.SIGNED_IN);
 		navigate("/");
 	};
 
@@ -137,21 +127,22 @@ const UserProvider = ({ children }) => {
 		setIsLoading(false);
 	}, [getLocalStorageItem]);
 
-	const providerValues = {
-		authStatus,
-		error,
-		isLoading,
-		register,
-		signIn,
-		signOut,
-		updateUser: saveUserChanges,
-		user,
-	};
-	console.log("This is my UserProvider");
+	const memoedValues = useMemo(
+		() => ({
+			isAuthenticated,
+			error,
+			isLoading,
+			register,
+			signIn,
+			signOut,
+			updateUser: saveUserChanges,
+			user,
+		}),
+		[user, isLoading, error]
+	);
+
 	return (
-		<UserContext.Provider value={providerValues}>
-			{children}
-		</UserContext.Provider>
+		<UserContext.Provider value={memoedValues}>{children}</UserContext.Provider>
 	);
 };
 
