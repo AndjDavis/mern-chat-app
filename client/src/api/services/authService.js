@@ -1,10 +1,9 @@
-import client from "./client";
-
-import routes from "../utils/routes";
+import client from "../client";
+import routes from "../../constants/routes";
 
 export const loginUser = async ({ username, password }) => {
 	try {
-		const { data } = await client.post(routes.loginUser, {
+		const { data } = await client.post(routes.loginRoute, {
 			username,
 			password,
 		});
@@ -24,7 +23,15 @@ export const registerUser = async ({ email, password, username }) => {
 
 		return data;
 	} catch (error) {
-		console.log("Register User Error:", error);
+		throw error;
+	}
+};
+
+export const logUserOut = async (userId) => {
+	try {
+		const { data } = await client.get(`${routes.logoutRoute}/${userId}`);
+		return data;
+	} catch (error) {
 		throw error;
 	}
 };
