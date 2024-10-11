@@ -1,31 +1,44 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 
 import { TitleWrapper, AvatarContainer } from "../styles/styles";
 import { getContacts } from "../services/userService";
 import Logo from "./Logo";
+import AvatarImage from "./AvatarImage";
+
+import { getUserContacts } from "../api/services/userService";
+import { TitleWrapper } from "../styles/styles";
+import { toastOptions } from "../constants";
 
 export default function Contacts({ changeConversation, chatRecipient, user }) {
 	const [contacts, setContacts] = useState([]);
 
+	// TODO: Cache avatar images to prevent too many api calls.
+	// TODO: Add refresh button.
 	useEffect(() => {
 		const fetchContacts = async () => {
+			let chatContacts = []
 			try {
-				const { data, status } = await getContacts(user._id);
-				if (status === 200 && data?.success) {
-					setContacts(data.contacts);
-				}
+				const { contacts } = await getUserContacts(user._id);
+				chatContacts = contacts
 			} catch (error) {
 				console.log("Fetching all contacts failed: ", error);
+				toast.error(
+					`Something went wrong while getting your contacts... ${error.message}`,
+					toastOptions
+				);
+			} finally {
+				setContacts(chatContacts);
 			}
 		};
 
-		if (user?._id) fetchContacts();
-	}, [user]);
+		fetchContacts();
+	}, []);
 
 	return (
 		<>
-			{user?.avatarImage && user?.username && (
+			{user?.avatarImage && (
 				<Container>
 					<Logo height="2rem" />
 					<ContactList
