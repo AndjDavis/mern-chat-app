@@ -1,22 +1,23 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import { BiPowerOff } from "react-icons/bi";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
-import { logUserOut } from "../services/authService.js";
+import { AuthContext } from "../context/AuthProvider";
+import { toastOptions } from "../constants";
 
 export default function Logout({ user }) {
-	const navigate = useNavigate();
+	const { signOut } = useContext(AuthContext);
 
 	const handleClick = async () => {
 		try {
-			const { data, status } = await logUserOut(user._id);
-			if (status === 200 && data?.success) {
-				localStorage.clear();
-				navigate("/login");
-			}
+			await signOut();
 		} catch (error) {
-			console.log("Something went wrong while logging you out...", error);
+			console.log("Logout Error...", error.message);
+			toast.error(
+				`Oops, we're having a problem signing you out... ${error.message}`,
+				toastOptions
+			);
 		}
 	};
 

@@ -6,11 +6,11 @@ import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import Logout from "./Logout";
 
-import { fetchMessages, postMessage } from "../services/messageService";
+import { fetchMessages, postMessage } from "../api/services/messageService";
 import { TitleWrapper, AvatarContainer } from "../styles/styles";
-import { formatChatMessage } from "../utils/lib";
-import { chatEvents } from "../utils/constants";
-import routes from "../utils/routes";
+import { formatChatMessage } from "../utils";
+import { chatEvents } from "../constants";
+import routes from "../constants/routes";
 
 export default function ChatContainer({ chatRecipient, user }) {
 	const socket = useRef();
@@ -25,22 +25,19 @@ export default function ChatContainer({ chatRecipient, user }) {
 		// TODO: Something better than a early return...
 		if (!userId || !recipientId) return;
 		try {
-			const { data, status } = await postMessage({
+			const { msg: newMsg } = await postMessage({
 				recipientId: recipientId,
 				authorId: userId,
 				message,
 			});
 
-			if (status === 201 && data?.success) {
-				const { msg: newMsg } = data;
-				socket.current.emit(chatEvents.send, {
-					to: recipientId,
-					from: userId,
-					id: newMsg.id,
-					message,
-				});
-				setMessages((prevMessages) => [...prevMessages, newMsg]);
-			}
+			socket.current.emit(chatEvents.send, {
+				to: recipientId,
+				from: userId,
+				id: newMsg.id,
+				message,
+			});
+			setMessages((prevMessages) => [...prevMessages, newMsg]);
 		} catch (error) {
 			console.log("Error sending new message: ", error);
 		}
@@ -63,14 +60,12 @@ export default function ChatContainer({ chatRecipient, user }) {
 	useEffect(() => {
 		const handleGetMessages = async () => {
 			try {
-				const { data, status } = await fetchMessages({
+				const { messages } = await fetchMessages({
 					recipientId: chatRecipient._id,
 					authorId: user._id,
 				});
 
-				if (status === 200 && data?.success) {
-					setMessages(data.messages);
-				}
+				setMessages(messages);
 			} catch (error) {
 				console.log("Error fetching messages: ", error);
 			}

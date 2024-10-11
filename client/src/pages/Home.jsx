@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
@@ -55,6 +57,7 @@ export default function Home() {
 					/>
 				)}
 			</Card>
+			<ToastContainer />
 		</Container>
 	);
 }

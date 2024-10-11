@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 
 import Logo from "../components/Logo";
+import { AuthContext } from "../context/AuthProvider";
 import {
 	Button,
 	Container as BaseContainer,
@@ -12,18 +13,31 @@ import {
 	Input,
 	Span,
 } from "../styles/styles";
-import { loginUser } from "../services/authService";
-import { toastOptions } from "../utils/constants";
+import { toastOptions } from "../constants";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 
+// TODO: Dev Only
+const testUsers = [
+	"TylerTrex",
+	"TroyTbone",
+	"TrainTed",
+	"TeleTvision",
+	"TuckerTired",
+	"ToyTrombone",
+	"andjdavis",
+];
+
 const initialState = {
-	username: "andjdavis",
+	username: testUsers[Math.floor(Math.random() * testUsers.length)],
 	password: "testtest",
 };
 
+// const initialRoute = { from: { pathname: "/" } };
+
 export default function Login() {
+	const { signIn, isLoading } = useContext(AuthContext);
 	useRedirectIfLoggedIn();
-	const navigate = useNavigate();
+
 	const [values, setValues] = useState(initialState);
 
 	const handleChange = (e) => {
@@ -55,24 +69,14 @@ export default function Login() {
 		if (!isValid) return;
 
 		try {
-			const formData = { ...values };
-			const { data, status } = await loginUser(formData);
-			if (data?.success && status === 200) {
-				localStorage.setItem(
-					process.env.REACT_APP_LOCALHOST_KEY,
-					JSON.stringify(data.user)
-				);
-
-				navigate("/");
-			} else if (status === 401) {
-				toast.error(data.message, toastOptions);
-			} else {
-				const failMessage = data?.message || "Something went wrong...";
-				toast.error(failMessage, toastOptions);
-			}
+			const credentials = { ...values };
+			await signIn(credentials);
 		} catch (error) {
-			console.log("Login Form Error: ", error);
-			toast.error("An error occurred during login", toastOptions);
+			console.log("Login error: ", error);
+			toast.error(
+				`An error occurred during login... ${error.message}`,
+				toastOptions
+			);
 		}
 	};
 
@@ -97,7 +101,12 @@ export default function Login() {
 						onChange={handleChange}
 						value={values.password}
 					/>
-					<Button type="submit">Log In</Button>
+					<Button
+						type="submit"
+						disabled={isLoading}
+					>
+						Log In
+					</Button>
 					<Span>
 						Don't have an account ? <Link to="/register">Create One.</Link>
 					</Span>

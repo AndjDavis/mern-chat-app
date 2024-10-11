@@ -36,8 +36,8 @@ const UserSchema = new Schema(
 UserSchema.methods.isAvatarImageSet = utils.isAvatarImageSet;
 UserSchema.set("toJSON", {
 	transform: function (doc, ret, options) {
-		delete ret.password; // Remove password field
-		return ret;
+		const { password, __v, ...user } = doc.toObject();
+		return user;
 	},
 });
 
