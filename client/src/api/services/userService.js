@@ -24,7 +24,7 @@ export const updateUserAvatarImage = async (selectedAvatar, userId) => {
 
 export const updateUser = async (userId, userUpdates) => {
 	try {
-		const url = `${routes.setAvatarRoute}/${userId}`;
+		const url = `${routes.updateUserRoute}/${userId}`;
 		const { data } = await client.put(url, {
 			userUpdates,
 		});

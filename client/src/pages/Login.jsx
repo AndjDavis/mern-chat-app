@@ -5,7 +5,7 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
 import Logo from "../components/Logo";
-import { AuthContext } from "../context/AuthProvider";
+import { UserContext } from "../context/UserProvider";
 import {
 	Button,
 	Container as BaseContainer,
@@ -35,7 +35,7 @@ const initialState = {
 // const initialRoute = { from: { pathname: "/" } };
 
 export default function Login() {
-	const { signIn, isLoading } = useContext(AuthContext);
+	const { signIn, isLoading } = useContext(UserContext);
 	useRedirectIfLoggedIn();
 
 	const [values, setValues] = useState(initialState);

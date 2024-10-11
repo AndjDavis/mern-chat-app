@@ -3,11 +3,11 @@ import { BiPowerOff } from "react-icons/bi";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 
-import { AuthContext } from "../context/AuthProvider";
+import { UserContext } from "../context/UserProvider";
 import { toastOptions } from "../constants";
 
-export default function Logout({ user }) {
-	const { signOut } = useContext(AuthContext);
+export default function Logout() {
+	const { signOut } = useContext(UserContext);
 
 	const handleClick = async () => {
 		try {

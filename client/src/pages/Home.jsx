@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
@@ -7,38 +7,34 @@ import "react-toastify/dist/ReactToastify.css";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
+import Loader from "../components/Loader";
+import { UserContext } from "../context/UserProvider";
 
 import useRedirectIfNotLoggedIn from "../hooks/useRedirectIfNotLoggedIn";
 import { Card, Container as BaseContainer } from "../styles/styles";
 
 export default function Home() {
+	const { user, isLoading } = useContext(UserContext);
 	useRedirectIfNotLoggedIn();
 	const navigate = useNavigate();
 
 	const [chatRecipient, setChatRecipient] = useState();
-	// TODO: Pull this of a global store.
-	const [currentUser, setCurrentUser] = useState({});
 
 	const handleChangeConversation = (newChatRecipient) => {
 		setChatRecipient(newChatRecipient);
 	};
 
 	useEffect(() => {
-		const getCurrentUser = async () => {
-			try {
-				const user = await JSON.parse(
-					localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-				);
-
-				if (!user.avatarImage) navigate("/profile");
-				else setCurrentUser(user);
-			} catch (error) {
-				console.log("Fetching all users error: ", error);
-			}
-		};
-
-		getCurrentUser();
+		if (user && !user?.avatarImage) navigate("/profile");
 	}, []);
+
+	if (isLoading) {
+		return (
+			<Container>
+				<Loader />
+			</Container>
+		);
+	}
 
 	return (
 		<Container>
@@ -46,14 +42,14 @@ export default function Home() {
 				<Contacts
 					chatRecipient={chatRecipient}
 					changeConversation={handleChangeConversation}
-					user={currentUser}
+					user={user}
 				/>
 				{chatRecipient === undefined ? (
-					<Welcome user={currentUser} />
+					<Welcome user={user} />
 				) : (
 					<ChatContainer
 						chatRecipient={chatRecipient}
-						user={currentUser}
+						user={user}
 					/>
 				)}
 			</Card>

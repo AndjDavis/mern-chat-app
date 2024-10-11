@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Logo from "../components/Logo";
 import { Button, Container, Form, Input, Span } from "../styles/styles";
-import { toastOptions } from "../utils/constants";
-import { registerNewUser } from "../services/authService";
+import { toastOptions } from "../constants";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
+
+import { UserContext } from "../context/UserProvider";
 
 const initialState = {
 	username: "test user",
@@ -20,9 +21,11 @@ const usernameMinLength = 3;
 const pwMinLength = 8;
 
 export default function Register() {
+	const { register } = useContext(UserContext);
+
 	useRedirectIfLoggedIn();
-	const navigate = useNavigate();
 	const [values, setValues] = useState(initialState);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleChange = (e) => {
 		setValues((currentValues) => ({
@@ -34,13 +37,14 @@ export default function Register() {
 	const handleValidation = () => {
 		const { confirmPassword, password } = values;
 
-		let toastMessage = null;
+		let toastMsg = null;
 		if (password !== confirmPassword) {
-			toastMessage = "Passwords do not match!";
+			toastMsg = "Passwords do not match!";
 		}
 
-		if (!toastMessage) return true;
-		toast.error(toastMessage, toastOptions);
+		if (!toastMsg) return true;
+
+		toast.error(toastMsg, toastOptions);
 		return false;
 	};
 
@@ -49,26 +53,19 @@ export default function Register() {
 
 		const isValid = handleValidation();
 		if (!isValid) return;
+		setIsLoading(true);
 
 		try {
-			const { confirmPassword, ...formData } = values;
-			const { data, status } = await registerNewUser(formData);
-
-			if (data?.success && status === 201) {
-				localStorage.setItem(
-					process.env.REACT_APP_LOCALHOST_KEY,
-					JSON.stringify(data.user)
-				);
-				navigate("/");
-			} else if (status === 409) {
-				toast.error(data.message, toastOptions);
-			} else {
-				const failMessage = data?.message || "Something went wrong...";
-				toast.error(failMessage, toastOptions);
-			}
+			const { confirmPassword, ...registration } = values;
+			await register(registration);
 		} catch (error) {
-			console.log("Register Form Error: ", error);
-			toast.error("An error occurred during registration", toastOptions);
+			console.log("Registration error: ", error);
+			toast.error(
+				`An error occurred during registration... ${error.message}`,
+				toastOptions
+			);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -112,7 +109,12 @@ export default function Register() {
 						onChange={handleChange}
 						value={values.confirmPassword}
 					/>
-					<Button type="submit">Create New User</Button>
+					<Button
+						type="submit"
+						disabled={isLoading}
+					>
+						Create New User
+					</Button>
 					<Span>
 						Already Have an account?
 						<Link to="/login"> Login </Link>
