@@ -1,40 +1,41 @@
 import React from "react";
-import { RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+
+import Register from "./pages/Register/Register";
+import Login from "./pages/Login/Login";
+import ChatRoom from "./pages/ChatRoom/ChatRoom";
+import Profile from "./pages/Profile/Profile";
 
 import UserProvider from "./context/UserProvider";
-import router from "./routers";
+import ProtectedRoute from "./routers/ProtectedRoute";
+import { paths } from "./constants";
 
 export default function App() {
 	return (
-		<UserProvider>
-			<RouterProvider router={router} />
-		</UserProvider>
+		<BrowserRouter>
+			<UserProvider>
+				<Routes>
+					<Route
+						path={paths.LOGIN}
+						element={<Login />}
+					/>
+					<Route
+						path={paths.REGISTER}
+						element={<Register />}
+					/>
+					<Route element={<ProtectedRoute />}>
+						<Route
+							path={paths.PROFILE}
+							element={<Profile />}
+						/>
+						<Route
+							path={paths.CHATROOM}
+							element={<ChatRoom />}
+						/>
+					</Route>
+				</Routes>
+			</UserProvider>
+		</BrowserRouter>
 	);
 }
-
-// export default function App() {
-// 	return (
-// 		<BrowserRouter>
-// 			<UserProvider>
-// 				<Routes>
-// 					<Route
-// 						path="/register"
-// 						element={<Register />}
-// 					/>
-// 					<Route
-// 						path="/login"
-// 						element={<Login />}
-// 					/>
-// 					<Route
-// 						path="/profile"
-// 						element={<Profile />}
-// 					/>
-// 					<Route
-// 						path="/"
-// 						element={<Home />}
-// 					/>
-// 				</Routes>
-// 			</UserProvider>
-// 		</BrowserRouter>
-// 	);
-// }
