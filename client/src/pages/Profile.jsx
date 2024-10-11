@@ -10,13 +10,11 @@ import Logout from "../components/Logout";
 
 import { UserContext } from "../context/UserProvider";
 import { Container, Button, FlexBox, TitleWrapper } from "../styles/styles";
-import useRedirectIfNotLoggedIn from "../hooks/useRedirectIfNotLoggedIn";
 import { toastOptions } from "../constants";
 import { getRandomMultiAvatars } from "../api/services/avatarService";
 
 export default function Profile() {
 	const { updateUser } = useContext(UserContext);
-	useRedirectIfNotLoggedIn();
 	const navigate = useNavigate();
 
 	const [avatars, setAvatars] = useState([]);

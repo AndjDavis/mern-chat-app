@@ -10,12 +10,10 @@ import Welcome from "../components/Welcome";
 import Loader from "../components/Loader";
 import { UserContext } from "../context/UserProvider";
 
-import useRedirectIfNotLoggedIn from "../hooks/useRedirectIfNotLoggedIn";
 import { Card, Container as BaseContainer } from "../styles/styles";
 
-export default function Home() {
+export default function ChatRoom() {
 	const { user, isLoading } = useContext(UserContext);
-	useRedirectIfNotLoggedIn();
 	const navigate = useNavigate();
 
 	const [chatRecipient, setChatRecipient] = useState();

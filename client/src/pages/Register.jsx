@@ -5,8 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Logo from "../components/Logo";
 import { Button, Container, Form, Input, Span } from "../styles/styles";
-import { toastOptions } from "../constants";
-import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
+import { toastOptions, paths } from "../constants";
 
 import { UserContext } from "../context/UserProvider";
 
@@ -23,7 +22,6 @@ const pwMinLength = 8;
 export default function Register() {
 	const { register } = useContext(UserContext);
 
-	useRedirectIfLoggedIn();
 	const [values, setValues] = useState(initialState);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -117,7 +115,7 @@ export default function Register() {
 					</Button>
 					<Span>
 						Already Have an account?
-						<Link to="/login"> Login </Link>
+						<Link to={paths.LOGIN}> Login </Link>
 					</Span>
 				</Form>
 			</Container>

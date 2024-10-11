@@ -90,7 +90,7 @@ export default function ChatContainer({ chatRecipient, user }) {
 						<h3>{chatRecipient.username}</h3>
 					</TitleWrapper>
 				</UserCard>
-				<Logout user={user} />
+				<Logout />
 			</Header>
 			<ChatMessages messages={messages} />
 			<ChatInput handleSendMsg={handleSendMessage} />

@@ -13,8 +13,7 @@ import {
 	Input,
 	Span,
 } from "../styles/styles";
-import { toastOptions } from "../constants";
-import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
+import { toastOptions, paths } from "../constants";
 
 // TODO: Dev Only
 const testUsers = [
@@ -32,12 +31,8 @@ const initialState = {
 	password: "testtest",
 };
 
-// const initialRoute = { from: { pathname: "/" } };
-
 export default function Login() {
 	const { signIn, isLoading } = useContext(UserContext);
-	useRedirectIfLoggedIn();
-
 	const [values, setValues] = useState(initialState);
 
 	const handleChange = (e) => {
@@ -108,7 +103,7 @@ export default function Login() {
 						Log In
 					</Button>
 					<Span>
-						Don't have an account ? <Link to="/register">Create One.</Link>
+						Don't have an account? <Link to={paths.REGISTER}>Create One.</Link>
 					</Span>
 				</Form>
 			</Container>
