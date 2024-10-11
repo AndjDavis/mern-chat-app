@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import LogoImg from "../assets/logo.svg";
+import LogoImg from "../../assets/logo.svg";
 
 export default function Logo({ height = "5rem" }) {
 	return (

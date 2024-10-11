@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import loader from "../assets/loader.gif";
+import loader from "../../assets/loader.gif";
 
 export default function Loader() {
 	return (
