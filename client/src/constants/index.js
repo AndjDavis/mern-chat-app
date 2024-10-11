@@ -13,3 +13,10 @@ export const chatEvents = {
 	connection: "connection",
 	disconnect: "disconnect",
 };
+
+export const paths = {
+	LOGIN: "/",
+	REGISTER: "/register",
+	PROFILE: "/profile",
+	CHATROOM: "/chatroom",
+};
