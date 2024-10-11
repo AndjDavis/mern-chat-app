@@ -4,13 +4,13 @@ import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
-import ChatContainer from "../components/ChatContainer";
-import Contacts from "../components/Contacts";
-import Welcome from "../components/Welcome";
-import Loader from "../components/Loader";
-import { UserContext } from "../context/UserProvider";
+import ChatContainer from "../../components/chat/containers/ChatContainer";
+import Contacts from "./components/Contacts";
+import Welcome from "./components/Welcome";
+import Loader from "../../components/Loader";
+import { UserContext } from "../../context/UserProvider";
 
-import { Card, Container as BaseContainer } from "../styles/styles";
+import { Card, Container as BaseContainer } from "../../styles/styles";
 
 export default function ChatRoom() {
 	const { user, isLoading } = useContext(UserContext);

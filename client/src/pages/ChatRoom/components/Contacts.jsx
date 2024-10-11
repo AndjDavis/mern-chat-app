@@ -2,30 +2,29 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-import { TitleWrapper, AvatarContainer } from "../styles/styles";
-import { getContacts } from "../services/userService";
-import Logo from "./Logo";
-import AvatarImage from "./AvatarImage";
+import Logo from "../../../components/Logo";
+import AvatarImage from "../../../components/AvatarImage";
 
-import { getUserContacts } from "../api/services/userService";
-import { TitleWrapper } from "../styles/styles";
-import { toastOptions } from "../constants";
+import { getUserContacts } from "../../../api/services/userService";
+import { TitleWrapper, AvatarContainer } from "../../../styles/styles";
+import { toastOptions } from "../../../constants";
 
 export default function Contacts({ changeConversation, chatRecipient, user }) {
 	const [contacts, setContacts] = useState([]);
+	console.log("Contacts.user", user);
 
 	// TODO: Cache avatar images to prevent too many api calls.
 	// TODO: Add refresh button.
 	useEffect(() => {
 		const fetchContacts = async () => {
-			let chatContacts = []
+			let chatContacts = [];
 			try {
 				const { contacts } = await getUserContacts(user._id);
-				chatContacts = contacts
+				chatContacts = contacts;
 			} catch (error) {
 				console.log("Fetching all contacts failed: ", error);
 				toast.error(
-					`Something went wrong while getting your contacts... ${error.message}`,
+					`Something went wrong while getting your contacts...`,
 					toastOptions
 				);
 			} finally {
@@ -57,7 +56,7 @@ export default function Contacts({ changeConversation, chatRecipient, user }) {
 							/>
 						</div>
 						<UserTitleWrapper>
-							<h2>{user.username}</h2>
+							<h2>User: {user.username}</h2>
 						</UserTitleWrapper>
 					</UserCard>
 				</Container>
@@ -88,12 +87,7 @@ const ContactDetail = ({ contact, chatRecipient, onClick }) => {
 			className={isActiveChatRecipient ? "selected" : ""}
 			onClick={() => onClick(contact)}
 		>
-			<div className="avatar">
-				<img
-					src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-					alt=""
-				/>
-			</div>
+			<AvatarImage src={contact.avatarImage} />
 			<TitleWrapper>
 				<h3>{contact.username}</h3>
 			</TitleWrapper>
@@ -101,7 +95,7 @@ const ContactDetail = ({ contact, chatRecipient, onClick }) => {
 	);
 };
 
-const ContactCard = styled(AvatarContainer)`
+const ContactCard = styled.div`
 	display: flex;
 	align-items: center;
 	background-color: #ffffff34;
@@ -142,6 +136,8 @@ const Container = styled.div`
 `;
 
 const UserCard = styled(AvatarContainer)`
+	border: solid 2px green;
+	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;

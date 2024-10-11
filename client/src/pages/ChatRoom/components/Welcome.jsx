@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Robot from "../assets/robot.gif";
+import Robot from "../../assets/robot.gif";
 
-import Logout from "./Logout";
-import { FlexBox } from "../styles/styles";
+import Logout from "../../../components/Logout";
+import { FlexBox } from "../../../styles/styles";
 
 export default function Welcome({ user }) {
 	const username = user?.username || "User";

@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Logo from "../components/Logo";
-import { Button, Container, Form, Input, Span } from "../styles/styles";
-import { toastOptions, paths } from "../constants";
+import Logo from "../../components/Logo";
+import { Button, Container, Form, Input, Span } from "../../styles/styles";
+import { toastOptions, paths } from "../../constants";
 
-import { UserContext } from "../context/UserProvider";
+import { UserContext } from "../../context/UserProvider";
 
 const initialState = {
 	username: "test user",

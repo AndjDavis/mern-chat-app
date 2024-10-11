@@ -2,15 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { io } from "socket.io-client";
 
-import ChatInput from "./ChatInput";
-import ChatMessages from "./ChatMessages";
-import Logout from "./Logout";
+import ChatInput from "../../../pages/ChatRoom/components/ChatInput";
+import ChatMessages from "../../../pages/ChatRoom/components/ChatMessages";
+import Logout from "../../../components/Logout";
 
-import { fetchMessages, postMessage } from "../api/services/messageService";
-import { TitleWrapper, AvatarContainer } from "../styles/styles";
-import { formatChatMessage } from "../utils";
-import { chatEvents } from "../constants";
-import routes from "../constants/routes";
+import {
+	fetchMessages,
+	postMessage,
+} from "../../../api/services/messageService";
+import { TitleWrapper, AvatarContainer } from "../../../styles/styles";
+import { formatChatMessage } from "../../../utils";
+import { chatEvents } from "../../../constants";
+import routes from "../../../constants/routes";
 
 export default function ChatContainer({ chatRecipient, user }) {
 	const socket = useRef();

@@ -4,14 +4,14 @@ import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import AvatarList from "../components/AvatarList";
-import Loader from "../components/Loader";
-import Logout from "../components/Logout";
+import AvatarList from "./components/AvatarList";
+import Loader from "../../components/Loader";
+import Logout from "../../components/Logout";
 
-import { UserContext } from "../context/UserProvider";
-import { Container, Button, FlexBox, TitleWrapper } from "../styles/styles";
-import { toastOptions } from "../constants";
-import { getRandomMultiAvatars } from "../api/services/avatarService";
+import { UserContext } from "../../context/UserProvider";
+import { Container, Button, FlexBox, TitleWrapper } from "../../styles/styles";
+import { toastOptions } from "../../constants";
+import { getRandomMultiAvatars } from "../../api/services/avatarService";
 
 export default function Profile() {
 	const { updateUser } = useContext(UserContext);

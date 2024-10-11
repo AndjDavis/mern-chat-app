@@ -4,16 +4,16 @@ import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
-import Logo from "../components/Logo";
-import { UserContext } from "../context/UserProvider";
+import Logo from "../../components/Logo";
+import { UserContext } from "../../context/UserProvider";
 import {
 	Button,
 	Container as BaseContainer,
 	Form,
 	Input,
 	Span,
-} from "../styles/styles";
-import { toastOptions, paths } from "../constants";
+} from "../../styles/styles";
+import { toastOptions, paths } from "../../constants";
 
 // TODO: Dev Only
 const testUsers = [
