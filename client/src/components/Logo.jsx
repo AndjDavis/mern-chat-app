@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import LogoImg from "../../assets/logo.svg";
+import logo from "../assets/logo.svg";
 
 export default function Logo({ height = "5rem" }) {
 	return (
 		<Container>
 			<Image
 				height={height}
-				src={LogoImg}
+				src={logo}
 				alt="logo"
 			/>
 			<h1>snappy</h1>

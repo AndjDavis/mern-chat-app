@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import Robot from "../../assets/robot.gif";
 
 import Logout from "../../../components/Logout";
+import RobotImage from "../../../components/RobotImage";
 import { FlexBox } from "../../../styles/styles";
 
 export default function Welcome({ user }) {
@@ -13,10 +13,7 @@ export default function Welcome({ user }) {
 			<div className="logout">
 				<Logout user={user} />
 			</div>
-			<img
-				src={Robot}
-				alt="robot"
-			/>
+			<RobotImage />
 			<h1>
 				Welcome, <span>{username}!</span>
 			</h1>

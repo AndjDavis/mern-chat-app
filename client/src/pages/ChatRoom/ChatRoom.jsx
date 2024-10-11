@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
-import ChatContainer from "../../components/chat/containers/ChatContainer";
+import ChatContainer from "./components/ChatContainer";
 import Contacts from "./components/Contacts";
 import Welcome from "./components/Welcome";
 import Loader from "../../components/Loader";
