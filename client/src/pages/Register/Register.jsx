@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,8 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Logo from "../../components/Logo";
 import { Button, Container, Form, Input, Span } from "../../styles/styles";
 import { toastOptions, paths } from "../../constants";
-
-import { UserContext } from "../../context/UserProvider";
+import { useAuth } from "../../hooks";
 
 const initialState = {
 	username: "test user",
@@ -20,7 +19,7 @@ const usernameMinLength = 3;
 const pwMinLength = 8;
 
 export default function Register() {
-	const { register } = useContext(UserContext);
+	const { register } = useAuth();
 
 	const [values, setValues] = useState(initialState);
 	const [isLoading, setIsLoading] = useState(false);

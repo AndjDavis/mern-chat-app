@@ -1,11 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
 import Logo from "../../components/Logo";
-import { UserContext } from "../../context/UserProvider";
 import {
 	Button,
 	Container as BaseContainer,
@@ -13,6 +12,7 @@ import {
 	Input,
 	Span,
 } from "../../styles/styles";
+import { useAuth } from "../../hooks";
 import { toastOptions, paths } from "../../constants";
 
 // TODO: Dev Only
@@ -32,7 +32,7 @@ const initialState = {
 };
 
 export default function Login() {
-	const { signIn, isLoading } = useContext(UserContext);
+	const { signIn, isLoading } = useAuth();
 	const [values, setValues] = useState(initialState);
 
 	const handleChange = (e) => {

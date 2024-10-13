@@ -6,15 +6,15 @@ export const AvatarContainer = styled.div.attrs((props) => ({
 }))`
 	.avatar img {
 		height: ${(props) => props.height};
-		max-inline-size: ${(props) => props.$maxis}
+		max-inline-size: ${(props) => props.$maxis};
 	}
 `;
 
 export const FlexBox = styled.div`
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
 `;
 
 export const Button = styled.button`
