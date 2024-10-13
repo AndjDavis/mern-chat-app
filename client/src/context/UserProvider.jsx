@@ -1,12 +1,19 @@
 import { useEffect, useState, createContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Loader from "../components/Loader";
 import {
 	loginUser,
 	logUserOut,
 	registerUser,
 } from "../api/services/authService";
 import { updateUser } from "../api/services/userService";
+import {
+	clearLocalStorage,
+	getLocalStorageItem,
+	setLocalStorageItem,
+} from "../utils";
+import { paths } from "../constants";
 
 const AuthStatus = {
 	SIGNED_IN: "signedIn",
@@ -14,34 +21,21 @@ const AuthStatus = {
 };
 
 const defaultState = {
-	isAuthenticated: false,
-	user: null,
-	isLoading: true,
 	error: null,
+	isAuthenticated: false,
+	isInitialLoading: true,
+	isLoading: false,
+	user: null,
 };
 
 export const UserContext = createContext(defaultState);
 
-const USER_STORAGE_KEY = process.env.REACT_APP_STORAGE_USER_KEY;
-
-const clearLocalStorage = () => {
-	localStorage.clear();
-};
-
-const getLocalStorageItem = (key = USER_STORAGE_KEY) => {
-	return JSON.parse(localStorage.getItem(key));
-};
-
-const setLocalStorageItem = (item, key = USER_STORAGE_KEY) => {
-	localStorage.setItem(key, JSON.stringify(item));
-};
-
-const removeLocalStorageItem = (key = USER_STORAGE_KEY) => {
-	localStorage.removeItem(key);
-};
-
 const UserProvider = ({ children }) => {
 	const navigate = useNavigate();
+
+	const [isInitialLoading, setIsInitialLoading] = useState(
+		defaultState.isInitialLoading
+	);
 	const [isLoading, setIsLoading] = useState(defaultState.isLoading);
 	const [user, setUser] = useState(defaultState.user);
 	const [error, setError] = useState(defaultState.error);
@@ -72,7 +66,7 @@ const UserProvider = ({ children }) => {
 			clearLocalStorage();
 			setUser(null);
 			setIsAuthenticated(false);
-			navigate("/login");
+			navigate(paths.LOGIN);
 		} catch (error) {
 			setError(error.message);
 		} finally {
@@ -98,7 +92,7 @@ const UserProvider = ({ children }) => {
 		setUser(user);
 		setLocalStorageItem(user);
 		setIsAuthenticated(AuthStatus.SIGNED_IN);
-		navigate("/");
+		navigate(paths.PROFILE);
 	};
 
 	const saveUserChanges = async (userUpdates) => {
@@ -123,8 +117,10 @@ const UserProvider = ({ children }) => {
 		const storedUser = getLocalStorageItem();
 		if (storedUser) {
 			setUser(storedUser);
+			setIsAuthenticated(true);
+			navigate(paths.CHAT);
 		}
-		setIsLoading(false);
+		setIsInitialLoading(false);
 	}, [getLocalStorageItem]);
 
 	const memoedValues = useMemo(
@@ -140,6 +136,10 @@ const UserProvider = ({ children }) => {
 		}),
 		[user, isLoading, error]
 	);
+
+	if (isInitialLoading) {
+		return <Loader />;
+	}
 
 	return (
 		<UserContext.Provider value={memoedValues}>{children}</UserContext.Provider>

@@ -18,5 +18,5 @@ export const paths = {
 	LOGIN: "/",
 	REGISTER: "/register",
 	PROFILE: "/profile",
-	CHATROOM: "/chatroom",
+	CHAT: "/chat",
 };

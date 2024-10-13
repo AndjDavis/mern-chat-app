@@ -1,10 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
-import ChatRoom from "./pages/ChatRoom/ChatRoom";
+import Chat from "./pages/Chat/Chat";
 import Profile from "./pages/Profile/Profile";
 
 import UserProvider from "./context/UserProvider";
@@ -30,8 +29,8 @@ export default function App() {
 							element={<Profile />}
 						/>
 						<Route
-							path={paths.CHATROOM}
-							element={<ChatRoom />}
+							path={paths.CHAT}
+							element={<Chat />}
 						/>
 					</Route>
 				</Routes>
