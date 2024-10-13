@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { io } from "socket.io-client";
 
-import ChatInput from "../../../pages/ChatRoom/components/ChatInput";
-import ChatMessages from "../../../pages/ChatRoom/components/ChatMessages";
+import ChatInput from "./ChatInput";
+import ChatMessages from "./ChatMessages";
 import Logout from "../../../components/Logout";
 
 import {

@@ -1,19 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 
-import ChatContainer from "./components/ChatContainer";
 import Contacts from "./components/Contacts";
-import Welcome from "./components/Welcome";
+import ChatRoom from "./components/ChatRoom";
 import Loader from "../../components/Loader";
-import { UserContext } from "../../context/UserProvider";
+import { useUser } from "../../hooks";
 
 import { Card, Container as BaseContainer } from "../../styles/styles";
 
-export default function ChatRoom() {
-	const { user, isLoading } = useContext(UserContext);
+export default function Chat() {
+	const { user, isLoading } = useUser();
 	const navigate = useNavigate();
 
 	const [chatRecipient, setChatRecipient] = useState();
@@ -22,6 +21,7 @@ export default function ChatRoom() {
 		setChatRecipient(newChatRecipient);
 	};
 
+	// TODO: Add default instead of navigating away
 	useEffect(() => {
 		if (user && !user?.avatarImage) navigate("/profile");
 	}, []);
@@ -42,14 +42,7 @@ export default function ChatRoom() {
 					changeConversation={handleChangeConversation}
 					user={user}
 				/>
-				{chatRecipient === undefined ? (
-					<Welcome user={user} />
-				) : (
-					<ChatContainer
-						chatRecipient={chatRecipient}
-						user={user}
-					/>
-				)}
+				<ChatRoom />
 			</Card>
 			<ToastContainer />
 		</Container>

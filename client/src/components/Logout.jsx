@@ -1,13 +1,12 @@
-import { useContext } from "react";
-import { BiPowerOff } from "react-icons/bi";
+import { BiLogOutCircle } from "react-icons/bi";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 
-import { UserContext } from "../context/UserProvider";
+import { useAuth } from "../hooks";
 import { toastOptions } from "../constants";
 
 export default function Logout() {
-	const { signOut } = useContext(UserContext);
+	const { signOut } = useAuth();
 
 	const handleClick = async () => {
 		try {
@@ -23,7 +22,7 @@ export default function Logout() {
 
 	return (
 		<Button onClick={handleClick}>
-			<BiPowerOff />
+			<BiLogOutCircle />
 		</Button>
 	);
 }

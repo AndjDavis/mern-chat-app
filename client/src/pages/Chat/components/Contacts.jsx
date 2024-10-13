@@ -11,7 +11,6 @@ import { toastOptions } from "../../../constants";
 
 export default function Contacts({ changeConversation, chatRecipient, user }) {
 	const [contacts, setContacts] = useState([]);
-	console.log("Contacts.user", user);
 
 	// TODO: Cache avatar images to prevent too many api calls.
 	// TODO: Add refresh button.

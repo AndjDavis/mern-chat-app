@@ -1,21 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 
-import Logout from "../../../components/Logout";
 import RobotImage from "../../../components/RobotImage";
 import { FlexBox } from "../../../styles/styles";
+import { useUser } from "../../../hooks";
 
-export default function Welcome({ user }) {
-	const username = user?.username || "User";
+export default function Welcome() {
+	const { user } = useUser();
 
 	return (
 		<Container>
-			<div className="logout">
-				<Logout user={user} />
-			</div>
 			<RobotImage />
 			<h1>
-				Welcome, <span>{username}!</span>
+				Welcome, <span>{user.username}!</span>
 			</h1>
 			<h3>Please select a chat to Start messaging.</h3>
 		</Container>
