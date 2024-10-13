@@ -15,12 +15,12 @@ const getContacts = async (req, res, next) => {
 			contacts,
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "getAllUsers", 400);
+		return serverErrorResponse(res, error, "getContacts", 400);
 	}
 };
 
 const updateUser = async (req, res, next) => {
-	const { id } = req.params
+	const { id } = req.params;
 	const { userUpdates } = req.body;
 	try {
 		if (!id || !userUpdates) {
@@ -30,11 +30,9 @@ const updateUser = async (req, res, next) => {
 			});
 		}
 
-		const updatedUser = await User.findByIdAndUpdate(
-			id,
-			userUpdates,
-			{ new: true }
-		);
+		const updatedUser = await User.findByIdAndUpdate(id, userUpdates, {
+			new: true,
+		});
 
 		if (!updatedUser) {
 			return res
@@ -50,7 +48,7 @@ const updateUser = async (req, res, next) => {
 	} catch (error) {
 		return serverErrorResponse(res, error, "updateUser");
 	}
-}
+};
 
 const setAvatar = async (req, res, next) => {
 	try {
