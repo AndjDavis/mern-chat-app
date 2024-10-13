@@ -7,8 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Contacts from "./components/Contacts";
 import ChatRoom from "./components/ChatRoom";
 import Loader from "../../components/Loader";
-import { useUser } from "../../hooks";
 
+import { paths } from "../../constants";
+import { useUser } from "../../hooks";
 import { Card, Container as BaseContainer } from "../../styles/styles";
 
 export default function Chat() {
@@ -23,7 +24,7 @@ export default function Chat() {
 
 	// TODO: Add default instead of navigating away
 	useEffect(() => {
-		if (user && !user?.avatarImage) navigate("/profile");
+		if (user && !user?.avatarImage) navigate(paths.PROFILE);
 	}, []);
 
 	if (isLoading) {
