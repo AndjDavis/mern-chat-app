@@ -52,7 +52,7 @@ const updateUser = asyncHandler(async (req, res) => {
 	res.status(200).json({
 		success: true,
 		message: "Successfully updated user",
-		user: user.toObject(),
+		user: user.toJSON(),
 	});
 });
 

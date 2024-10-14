@@ -6,6 +6,7 @@ const User = require("../model/User");
 // @route   POST /api/auth/login
 // @access  Public
 const loginUser = asyncHandler(async (req, res, next) => {
+	const { username, password } = req.body;
 	if (!username || !password) {
 		res.status(500);
 		throw new Error("Missing credentials");
