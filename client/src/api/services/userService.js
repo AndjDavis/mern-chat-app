@@ -10,18 +10,6 @@ export const getUserContacts = async (userId) => {
 	}
 };
 
-export const updateUserAvatarImage = async (selectedAvatar, userId) => {
-	try {
-		const url = `${routes.setAvatarRoute}/${userId}`;
-		const { data } = await client.put(url, {
-			image: selectedAvatar,
-		});
-		return data;
-	} catch (error) {
-		throw error;
-	}
-};
-
 export const updateUser = async (userId, userUpdates) => {
 	try {
 		const url = `${routes.updateUserRoute}/${userId}`;

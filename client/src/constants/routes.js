@@ -4,7 +4,6 @@ const logoutRoute = `/api/auth/logout`;
 const registerRoute = `/api/auth/register`;
 const contactsRoute = `/api/users/contacts`;
 const updateUserRoute = "/api/users/";
-const setAvatarRoute = `/api/users/setavatar`;
 const messageRoute = `/api/messages`;
 
 const routes = {
@@ -14,7 +13,6 @@ const routes = {
 	logoutRoute,
 	messageRoute,
 	registerRoute,
-	setAvatarRoute,
 	updateUserRoute,
 };
 
