@@ -1,10 +1,14 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const dotenv = require("dotenv").config();
-const { errorHandler } = require("./middleware/errorMiddleware");
+const passport = require("./config/passport");
 const connectDB = require("./config/db");
 const initializeSocket = require("./socket/socket");
+
+const { logger } = require("./middleware/logging");
+const { errorHandler } = require("./middleware/errorMiddleware");
 
 connectDB();
 const app = express();
@@ -17,11 +21,14 @@ const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const corOptions = {
 	origin: FRONTEND_BASE_URL,
 	allowedHeaders: ["content-type"],
+	credentials: true,
 };
 
 app.use(cors(corOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(logger);
 
 // routes
 app.use("/api/auth", authRoutes);
