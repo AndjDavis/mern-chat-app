@@ -1,20 +1,21 @@
 const { createCipheriv, createDecipheriv, scryptSync } = require("crypto");
 const config = require("../config/authConfig");
 
-const secret = config.get("authoriziation.token.secret");
+const secret = config.get("authentication.token.secret");
+console.log("SECRET", secret);
 const algorithm = "aes-192-cbc";
 
 const key = scryptSync(secret, "salt", 24);
 const iv = Buffer.alloc(16, 0); // Initialization crypto vector
 
-export function encrypt(text) {
+function encrypt(text) {
 	const cipher = createCipheriv(algorithm, key, iv);
 	let encrypted = cipher.update(text, "utf8", "hex");
 	encrypted += cipher.final("hex");
 	return encrypted;
 }
 
-export function decrypt(text) {
+function decrypt(text) {
 	const decipher = createDecipheriv(algorithm, key, iv);
 	let decrypted = decipher.update(text, "hex", "utf8");
 	decrypted += decipher.final("utf8");

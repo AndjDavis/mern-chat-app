@@ -1,5 +1,5 @@
 const { decode, sign, verify } = require("jsonwebtoken");
-const { decrypt, encrypt } = require("./encryption-util");
+const { decrypt, encrypt } = require("./encryption");
 const config = require("../config/authConfig");
 
 const TokenType = {
@@ -37,7 +37,7 @@ const generateRefreshToken = (userId) => {
 	return generateToken(userId, TokenType.REFRESH_TOKEN);
 };
 
-export const getTokenType = (token) => {
+const getTokenType = (token) => {
 	return verify(token, config.get("authentication.token.secret")).type;
 };
 

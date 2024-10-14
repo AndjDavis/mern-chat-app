@@ -5,11 +5,13 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const initializeSocket = require("./socket/socket");
 
+const app = express();
+
 const userRoutes = require("./routes/users");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 
-const app = express();
+const { serverErrorResponse } = require("./middleware/errors");
 
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const corOptions = {
@@ -26,6 +28,7 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
+app.use(serverErrorResponse);
 
 const PORT = process.env.PORT;
 const server = app.listen(PORT, () => {
