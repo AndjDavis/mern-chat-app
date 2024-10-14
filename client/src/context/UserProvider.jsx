@@ -91,8 +91,9 @@ const UserProvider = ({ children }) => {
 	const handleSuccessfulAuth = (user) => {
 		setUser(user);
 		setLocalStorageItem(user);
-		setIsAuthenticated(AuthStatus.SIGNED_IN);
-		navigate(paths.PROFILE);
+		setIsAuthenticated(true);
+		let path = user?.avatarImage ? paths.CHAT : paths.PROFILE;
+		navigate(path);
 	};
 
 	const saveUserChanges = async (userUpdates) => {

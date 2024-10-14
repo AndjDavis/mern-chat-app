@@ -3,15 +3,20 @@ import styled from "styled-components";
 import Logout from "../../../components/Logout";
 import ProfileButton from "../../../components/ProfileButton";
 import Welcome from "./Welcome";
+import ChatContainer from "./ChatContainer";
 
-export default function ChatRoom() {
+export default function ChatRoom({ chatRecipient }) {
 	return (
 		<Container>
 			<div className="header">
 				<ProfileButton />
 				<Logout />
 			</div>
-			<Welcome />
+			{chatRecipient ? (
+				<ChatContainer chatRecipient={chatRecipient} />
+			) : (
+				<Welcome />
+			)}
 		</Container>
 	);
 }

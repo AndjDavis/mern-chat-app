@@ -12,8 +12,6 @@ import { toastOptions } from "../../../constants";
 export default function Contacts({ changeConversation, chatRecipient, user }) {
 	const [contacts, setContacts] = useState([]);
 
-	// TODO: Cache avatar images to prevent too many api calls.
-	// TODO: Add refresh button.
 	useEffect(() => {
 		const fetchContacts = async () => {
 			let chatContacts = [];
@@ -108,6 +106,7 @@ const ContactCard = styled.div`
 
 	&.selected {
 		background-color: #9a86f3;
+		justify-content: center;
 	}
 `;
 
@@ -135,7 +134,6 @@ const Container = styled.div`
 `;
 
 const UserCard = styled(AvatarContainer)`
-	border: solid 2px green;
 	width: 100%;
 	display: flex;
 	justify-content: center;

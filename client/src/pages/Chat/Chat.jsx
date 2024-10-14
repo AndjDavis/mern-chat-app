@@ -43,7 +43,7 @@ export default function Chat() {
 					changeConversation={handleChangeConversation}
 					user={user}
 				/>
-				<ChatRoom />
+				<ChatRoom chatRecipient={chatRecipient} />
 			</Card>
 			<ToastContainer />
 		</Container>

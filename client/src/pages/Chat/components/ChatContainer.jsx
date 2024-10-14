@@ -4,7 +4,6 @@ import { io } from "socket.io-client";
 
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
-import Logout from "../../../components/Logout";
 
 import {
 	fetchMessages,
@@ -14,8 +13,10 @@ import { TitleWrapper, AvatarContainer } from "../../../styles/styles";
 import { formatChatMessage } from "../../../utils";
 import { chatEvents } from "../../../constants";
 import routes from "../../../constants/routes";
+import { useUser } from "../../../hooks";
 
-export default function ChatContainer({ chatRecipient, user }) {
+export default function ChatContainer({ chatRecipient }) {
+	const { user } = useUser();
 	const socket = useRef();
 	const socketIsConfigured = useRef(false);
 
@@ -93,7 +94,6 @@ export default function ChatContainer({ chatRecipient, user }) {
 						<h3>{chatRecipient.username}</h3>
 					</TitleWrapper>
 				</UserCard>
-				<Logout />
 			</Header>
 			<ChatMessages messages={messages} />
 			<ChatInput handleSendMsg={handleSendMessage} />
