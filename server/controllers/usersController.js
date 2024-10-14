@@ -1,103 +1,62 @@
+const asyncHandler = require("express-async-handler");
 const User = require("../model/User");
 
-const getContacts = async (req, res, next) => {
-	try {
-		const contacts = await User.find({ _id: { $ne: req.params.id } }).select([
-			"email",
-			"username",
-			"avatarImage",
-			"_id",
-		]);
-
-		return res.status(200).json({
-			success: true,
-			contacts,
-		});
-	} catch (error) {
-		next(error);
+// @desc    Get user contacts
+// @route   POST /api/users/contacts
+// @access  Private
+const getContacts = asyncHandler(async (req, res) => {
+	const { id: userId } = req.params;
+	if (!userId) {
+		res.status(400);
+		throw new Error("Missing id param");
 	}
-};
 
-const updateUser = async (req, res, next) => {
+	const contacts = await User.find({ _id: { $ne: userId } }).select([
+		"email",
+		"username",
+		"avatarImage",
+		"_id",
+	]);
+
+	res.status(200).json({
+		success: true,
+		contacts,
+	});
+});
+
+// @desc    update user
+// @route   PUT /api/users/contacts
+// @access  Private
+const updateUser = asyncHandler(async (req, res) => {
 	const { id } = req.params;
 	const { userUpdates } = req.body;
-	try {
-		if (!id || !userUpdates) {
-			return res.status(400).json({
-				message: "Missing user ID or body",
-				success: false,
-			});
-		}
 
-		const updatedUser = await User.findByIdAndUpdate(id, userUpdates, {
-			new: true,
-		});
-
-		if (!updatedUser) {
-			return res
-				.status(404)
-				.json({ message: "User not found", success: false });
-		}
-
-		return res.status(200).json({
-			success: true,
-			message: "Successfully updated user",
-			user: updatedUser,
-		});
-	} catch (error) {
-		next(error);
+	if (!id) {
+		res.status(400);
+		throw new Error("Missing Id param");
 	}
-};
-
-const setAvatar = async (req, res, next) => {
-	try {
-		const { image: avatarImage, id: userId } = req.body;
-
-		if (!userId || !avatarImage) {
-			return res.status(400).json({
-				message: "Missing user ID or avatar image",
-				success: false,
-			});
-		}
-
-		const userData = await User.findByIdAndUpdate(
-			userId,
-			{
-				avatarImage,
-			},
-			{ new: true }
-		);
-
-		if (!userData) {
-			return res
-				.status(404)
-				.json({ message: "User not found", success: false });
-		}
-
-		const avatarIsSet = userData?.isAvatarImageSet() || false;
-
-		if (!avatarIsSet) {
-			console.log("Failed to set avatarImage for user:", userId); // Log the error
-			return res.status(500).json({
-				message: "Failed to update user's avatar image.",
-				success: false,
-			});
-		}
-
-		return res.status(200).json({
-			success: true,
-			message: "Successfully set a new avatar",
-			user: userData,
-			isSet: userData.isAvatarImageSet(),
-			image: userData.avatarImage,
-		});
-	} catch (error) {
-		next(error);
+	if (!userUpdates) {
+		res.status(400);
+		throw new Error("Missing updates to user");
 	}
-};
+
+	const user = await User.findByIdAndUpdate(id, userUpdates, {
+		new: true,
+	});
+
+	if (!user) {
+		res.status(404);
+		throw new Error("User not found");
+	}
+
+	res.status(200).json({
+		success: true,
+		message: "Successfully updated user",
+		user: user.toObject(),
+	});
+});
 
 module.exports = {
-	setAvatar: setAvatar,
 	getContacts: getContacts,
 	updateUser: updateUser,
 };

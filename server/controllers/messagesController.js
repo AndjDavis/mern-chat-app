@@ -1,64 +1,59 @@
+const asyncHandler = require("express-async-handler");
 const Message = require("../model/Message");
 
-const getMessages = async (req, res, next) => {
-	try {
-		const { id: author } = req.params;
-		const { recipient } = req.query;
+// TODO: Make private
+// @desc    Get messages
+// @route   GET /api/messages/:id
+// @access  Private
+const getMessages = asyncHandler(async (req, res) => {
+	const { id: author } = req.params;
+	const { recipient } = req.query;
 
-		if (!author || !recipient) {
-			return res.status(400).json({
-				message: "Missing params in the request",
-				success: false,
-			});
-		}
-
-		const messages = await Message.find({
-			$or: [
-				{ author: author, recipient: recipient },
-				{ author: recipient, recipient: author },
-			],
-		}).sort({ updatedAt: 1 });
-
-		return res.status(200).json({
-			messages,
-			success: true,
-		});
-	} catch (error) {
-		next(error)
+	if (!author || !recipient) {
+		res.status(400);
+		throw new Error("Missing params in the request");
 	}
-};
 
-const postMessage = async (req, res, next) => {
-	try {
-		const { author, recipient, message } = req.body;
-		if (!author || !recipient || !message) {
-			return res.status(400).json({
-				message: "Missing fields in the request body",
-				success: false,
-			});
-		}
+	const messages = await Message.find({
+		$or: [
+			{ author: author, recipient: recipient },
+			{ author: recipient, recipient: author },
+		],
+	}).sort({ updatedAt: 1 });
 
-		const newMsg = await Message.create({
-			message: { text: message },
-			recipient,
-			author,
-		});
+	res.status(200).json({
+		messages,
+		success: true,
+	});
+});
 
-		if (!newMsg) {
-			return res.status(400).json({
-				message: "Failed to add message to the database",
-				success: false,
-			});
-		}
+// @desc    Post new message
+// @route   POST /api/messages
+// @access  Private
+const postMessage = asyncHandler(async (req, res) => {
+	const { author, recipient, message } = req.body;
 
-		return res.status(201).json({
-			success: true,
-			msg: newMsg,
-		});
-	} catch (error) {
-		next(error);
+	let missingFields = [];
+	if (!author) missingFields.push("author");
+	if (!recipient) missingFields.push("recipient");
+	if (!message) missingFields.push("message");
+	if (missingFields.length > 0) {
+		const fields = missingFields.join(", ");
+		res.status(400);
+		throw new Error(`Please add these missing field(s) ${fields}`);
 	}
-};
+
+	const newMsg = await Message.create({
+		message: { text: message },
+		recipient,
+		author,
+	});
+
+	res.status(201).json({
+		success: true,
+		msg: newMsg,
+	});
+});
 
 module.exports = {
 	getMessages: getMessages,

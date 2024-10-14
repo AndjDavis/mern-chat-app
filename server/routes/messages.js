@@ -6,6 +6,7 @@ const {
 
 const router = express.Router();
 
+// TODO: Make private route
 router.post("/", postMessage);
 router.get("/:id", getMessages);
 

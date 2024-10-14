@@ -1,90 +1,95 @@
 const bcrypt = require("bcrypt");
+const asyncHandler = require("express-async-handler");
 const User = require("../model/User");
 
-const loginUser = async (req, res, next) => {
-	try {
-		const { username, password } = req.body;
-		const user = await User.findOne({ username });
-
-		if (!user || !(await bcrypt.compare(password, user.password))) {
-			return res.status(401).json({
-				message: "Incorrect Username or Password",
-				success: false,
-			});
-		}
-
-		res.status(200);
-		req.user = user;
-		next();
-	} catch (error) {
-		next(error);
+// @desc    Authenticate a user
+// @route   POST /api/auth/login
+// @access  Public
+const loginUser = asyncHandler(async (req, res, next) => {
+	if (!username || !password) {
+		res.status(500);
+		throw new Error("Missing credentials");
 	}
-};
 
-const registerNewUser = async (req, res, next) => {
-	try {
-		const { username, email } = req.body;
-		const existingFields = await User.findOne({
-			$or: [{ username }, { email }],
-		});
+	const user = await User.findOne({ username });
 
-		if (existingFields) {
-			return res.status(409).json({
-				message: "Email or username already in use...",
-				success: false,
-			});
-		}
-
-		const hashedPassword = await bcrypt.hash(req.body.password, 10);
-		const newUser = await User.create({
-			username,
-			email,
-			password: hashedPassword,
-		});
-
-		res.status(201);
-		req.user = newUser;
-		next();
-	} catch (error) {
-		next(error);
+	if (!user || !(await bcrypt.compare(password, user.password))) {
+		res.status(400);
+		throw new Error("Invalid credentials");
 	}
-};
 
-const logout = async (req, res, next) => {
-	try {
-		if (!req.params.id) {
-			return res
-				.status(400)
-				.json({ message: "User id is required", success: false });
-		}
+	res.status(200);
+	req.user = user;
+	next();
+});
 
-		onlineUsers.delete(req.params.id);
-		res.cookie("refresh_token", "", { httpOnly: true });
-		res.status(200).json({
-			success: true,
-			message: "User successfully logged out...",
-		});
-	} catch (error) {
-		next(error);
+// @desc    Log user out
+// @route   GET /api/auth/logout/:id
+// @access  Private
+const logoutUser = asyncHandler(async (req, res) => {
+	if (!req.params.id) {
+		res.status(400);
+		throw new Error("User Id is required");
 	}
-};
 
-const refreshToken = async (req, res, next) => {
-	try {
-		next();
-		const tokenEncrypted = req.cookies.refresh_token;
-		const userId = await parseTokenAndGetUserId(tokenEncrypted);
-		const user = await User.findById(userId);
-		req.user = user;
-		next();
-	} catch (error) {
-		next(error);
+	onlineUsers.delete(req.params.id);
+	res.cookie("refresh_token", "", { httpOnly: true });
+	res.status(200).json({
+		success: true,
+		message: "User successfully logged out...",
+	});
+});
+
+// @desc    Refresh token
+// @route   GET /api/auth/refresh-token
+// @access  Public
+const refreshToken = asyncHandler(async (req, res, next) => {
+	const tokenEncrypted = req.cookies.refresh_token;
+	const userId = await parseTokenAndGetUserId(tokenEncrypted);
+	const user = await User.findById(userId);
+	req.user = user;
+	next();
+});
+
+// @desc    Register new user
+// @route   POST /api/auth/register
+// @access  Public
+const registerUser = asyncHandler(async (req, res, next) => {
+	const { email, password, username } = req.body;
+	if (!email || !password || !username) {
+		res.status(500);
+		throw new Error("Please add all fields");
 	}
-};
+
+	const userExists = await User.findOne({
+		$or: [{ username }, { email }],
+	});
+
+	if (userExists) {
+		res.status(400);
+		throw new Error("User already exists");
+	}
+
+	const hashedPassword = await bcrypt.hash(req.body.password, 10);
+	const user = await User.create({
+		username,
+		email,
+		password: hashedPassword,
+	});
+
+	if (!user) {
+		res.status(400);
+		throw new Error("Invalid user data");
+	}
+
+	res.status(201);
+	req.user = user;
+	next();
+});
 
 module.exports = {
 	login: loginUser,
-	logout: logout,
+	logout: logoutUser,
 	refreshToken: refreshToken,
-	register: registerNewUser,
+	register: registerUser,
 };
