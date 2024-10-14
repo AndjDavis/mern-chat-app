@@ -1,5 +1,4 @@
 const Message = require("../model/Message");
-const { serverErrorResponse } = require("./middleware");
 
 const getMessages = async (req, res, next) => {
 	try {
@@ -25,7 +24,7 @@ const getMessages = async (req, res, next) => {
 			success: true,
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "getMessages", 500);
+		next(error)
 	}
 };
 
@@ -57,7 +56,7 @@ const postMessage = async (req, res, next) => {
 			msg: newMsg,
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "postMessage", 400);
+		next(error);
 	}
 };
 

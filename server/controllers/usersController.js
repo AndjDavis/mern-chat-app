@@ -1,4 +1,3 @@
-const { serverErrorResponse } = require("./middleware");
 const User = require("../model/User");
 
 const getContacts = async (req, res, next) => {
@@ -15,7 +14,7 @@ const getContacts = async (req, res, next) => {
 			contacts,
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "getContacts", 400);
+		next(error);
 	}
 };
 
@@ -46,7 +45,7 @@ const updateUser = async (req, res, next) => {
 			user: updatedUser,
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "updateUser");
+		next(error);
 	}
 };
 
@@ -93,7 +92,7 @@ const setAvatar = async (req, res, next) => {
 			image: userData.avatarImage,
 		});
 	} catch (error) {
-		return serverErrorResponse(res, error, "setAvatar");
+		next(error);
 	}
 };
 
