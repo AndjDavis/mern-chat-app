@@ -2,7 +2,6 @@ const { createCipheriv, createDecipheriv, scryptSync } = require("crypto");
 const config = require("../config/authConfig");
 
 const secret = config.get("authentication.token.secret");
-console.log("SECRET", secret);
 const algorithm = "aes-192-cbc";
 
 const key = scryptSync(secret, "salt", 24);

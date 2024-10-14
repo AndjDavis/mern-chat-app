@@ -10,16 +10,11 @@ const generateTokensAndAuthenticateUser = async (req, res, next) => {
 	try {
 		const { user } = req;
 		const userId = user._id.toString();
-		console.log("USER", user);
 
 		const { token: access_token, expiration: token_expiration } =
 			await generateAccessToken(userId);
 		const authenticatedUser = user.toObject();
 		const { token: refreshToken } = generateRefreshToken(userId);
-		console.log(
-			"generateTokensAndAuthenticateUser - authenticatedUserResponse",
-			authenticatedUser
-		);
 
 		res.cookie("refresh_token", refreshToken, { httpOnly: true });
 		res.json({
