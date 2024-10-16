@@ -13,10 +13,12 @@ export const getUserContacts = async (userId) => {
 export const updateUser = async (userId, userUpdates) => {
 	try {
 		const url = `${routes.updateUserRoute}/${userId}`;
-		const { data } = await client.put(url, {
+		const {
+			data: { user, success, ...token },
+		} = await client.put(url, {
 			userUpdates,
 		});
-		return data;
+		return { user, token };
 	} catch (error) {
 		throw error;
 	}

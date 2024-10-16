@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Buffer } from "buffer";
-import { errorHandler } from "../interceptors";
+import { errorHandler } from "../errorHandler";
 
 const avatarUrl = "https://api.multiavatar.com";
 const avatarClient = axios.create({ baseURL: avatarUrl });
