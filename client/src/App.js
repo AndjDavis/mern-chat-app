@@ -6,14 +6,14 @@ import Login from "./pages/Login/Login";
 import Chat from "./pages/Chat/Chat";
 import Profile from "./pages/Profile/Profile";
 
-import UserProvider from "./context/UserProvider";
+import AuthContainer from "./providers/AuthContainer";
 import ProtectedRoute from "./routers/ProtectedRoute";
 import { paths } from "./constants";
 
 export default function App() {
 	return (
 		<BrowserRouter>
-			<UserProvider>
+			<AuthContainer.Provider>
 				<Routes>
 					<Route
 						path={paths.LOGIN}
@@ -34,7 +34,7 @@ export default function App() {
 						/>
 					</Route>
 				</Routes>
-			</UserProvider>
+			</AuthContainer.Provider>
 		</BrowserRouter>
 	);
 }

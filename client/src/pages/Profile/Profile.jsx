@@ -56,7 +56,7 @@ export default function Profile() {
 		try {
 			const avatars = await getRandomMultiAvatars();
 			setAvatars(avatars);
-			setLocalStorageItem(avatars, AVATAR_STORAGE_KEY);
+			setLocalStorageItem(AVATAR_STORAGE_KEY, avatars);
 		} catch (error) {
 			console.log("Fetching avatars error: ", error);
 			const message = error?.message || "Please try again later.";
