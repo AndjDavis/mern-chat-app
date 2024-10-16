@@ -4,14 +4,14 @@ export const clearLocalStorage = () => {
 	localStorage.clear();
 };
 
-export const getLocalStorageItem = (key = USER_STORAGE_KEY) => {
+export const getLocalStorageItem = (key) => {
 	return JSON.parse(localStorage.getItem(key));
 };
 
-export const setLocalStorageItem = (item, key = USER_STORAGE_KEY) => {
+export const setLocalStorageItem = (key, item) => {
 	localStorage.setItem(key, JSON.stringify(item));
 };
 
-export const removeLocalStorageItem = (key = USER_STORAGE_KEY) => {
+export const removeLocalStorageItem = (key) => {
 	localStorage.removeItem(key);
 };
