@@ -56,7 +56,15 @@ const updateUser = asyncHandler(async (req, res) => {
 	});
 });
 
+// @desc    get user
+// @route   GET /api/users/me
+// @access  Private
+const getMe = asyncHandler(async (req, res) => {
+	res.status(200).json({ success: true, user: req.user });
+});
+
 module.exports = {
 	getContacts: getContacts,
+	getMe: getMe,
 	updateUser: updateUser,
 };

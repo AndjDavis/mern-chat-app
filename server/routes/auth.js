@@ -13,7 +13,7 @@ const {
 } = require("../controllers/authController");
 
 router.post("/login", login, generateTokensAndAuthenticateUser);
-router.get("/logout/:id", requireAuth, logout);
+router.get("/logout", logout);
 router.get("/refresh-token", refreshToken, generateTokensAndAuthenticateUser);
 router.post("/register", register, generateTokensAndAuthenticateUser);
 

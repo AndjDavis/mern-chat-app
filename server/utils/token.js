@@ -1,11 +1,7 @@
 const { decode, sign, verify } = require("jsonwebtoken");
 const { decrypt, encrypt } = require("./encryption");
 const config = require("../config/authConfig");
-
-const TokenType = {
-	ACCESS_TOKEN: "access_token",
-	REFRESH_TOKEN: "refresh_token",
-};
+const { TokenType } = require("../constants/tokens");
 
 const generateToken = (userId, type) => {
 	const audience = config.get("authentication.token.audience");
@@ -56,5 +52,4 @@ module.exports = {
 	generateToken,
 	getTokenType,
 	parseTokenAndGetUserId,
-	TokenType,
 };

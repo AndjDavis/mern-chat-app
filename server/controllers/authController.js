@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const User = require("../model/User");
-
+const { TokenType } = require("../constants/tokens");
+const { parseTokenAndGetUserId } = require("../utils/token");
 // @desc    Authenticate a user
 // @route   POST /api/auth/login
 // @access  Public
@@ -28,13 +29,20 @@ const loginUser = asyncHandler(async (req, res, next) => {
 // @route   GET /api/auth/logout/:id
 // @access  Private
 const logoutUser = asyncHandler(async (req, res) => {
-	if (!req.params.id) {
+	// TODO: This should be part of protected middleware.
+	const refreshToken = req.cookies[TokenType.REFRESH_TOKEN];
+	if (!refreshToken) {
 		res.status(400);
-		throw new Error("User Id is required");
+		throw new Error("Refresh token is missing");
 	}
 
-	onlineUsers.delete(req.params.id);
-	res.cookie("refresh_token", "", { httpOnly: true });
+	// Verify and decode the refresh token
+	const tokenEncrypted = req.cookies[TokenType.REFRESH_TOKEN];
+	const userId = await parseTokenAndGetUserId(tokenEncrypted);
+
+	onlineUsers.delete(userId);
+	res.cookie(TokenType.REFRESH_TOKEN, "", { httpOnly: true });
+
 	res.status(200).json({
 		success: true,
 		message: "User successfully logged out...",
@@ -45,9 +53,25 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/refresh-token
 // @access  Public
 const refreshToken = asyncHandler(async (req, res, next) => {
-	const tokenEncrypted = req.cookies.refresh_token;
+	const tokenEncrypted = req.cookies[TokenType.REFRESH_TOKEN];
+	if (!tokenEncrypted) {
+		res.status(401);
+		throw new Error("Refresh token is missing");
+	}
+
 	const userId = await parseTokenAndGetUserId(tokenEncrypted);
+	if (!userId) {
+		res.status(401)
+		throw new Error("Invalid refresh token")
+	}
+
 	const user = await User.findById(userId);
+	if (!user) {
+		res.status(401)
+		throw new Error("User not found")
+	}
+
+	res.status(200);
 	req.user = user;
 	next();
 });

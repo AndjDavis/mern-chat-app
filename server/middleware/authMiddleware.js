@@ -1,6 +1,7 @@
 const passport = require("passport");
 const asyncHandler = require("express-async-handler");
 const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+const { TokenType } = require("../constants/tokens");
 
 const requireAuth = passport.authenticate("jwt", {
 	userProperty: "currentUser",
@@ -14,9 +15,12 @@ const generateTokensAndAuthenticateUser = asyncHandler(async (req, res) => {
 	const { token: access_token, expiration: token_expiration } =
 		generateAccessToken(userId);
 	const { token: refreshToken } = generateRefreshToken(userId);
-
 	const authenticatedUser = user.toJSON();
-	res.cookie("refresh_token", refreshToken, { httpOnly: true });
+
+	res.cookie(TokenType.REFRESH_TOKEN, refreshToken, {
+		httpOnly: true,
+	});
+
 	res.json({
 		success: true,
 		access_token,

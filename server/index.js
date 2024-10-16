@@ -20,7 +20,7 @@ const messageRoutes = require("./routes/messages");
 const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 const corOptions = {
 	origin: FRONTEND_BASE_URL,
-	allowedHeaders: ["content-type"],
+	allowedHeaders: ["content-type", "Authorization"],
 	credentials: true,
 };
 
