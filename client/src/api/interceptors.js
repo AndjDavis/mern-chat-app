@@ -1,55 +1,29 @@
-export class ErrorHandler {
-	handle(error) {
-		const url = error.config?.url || "URL not available";
-		let message = "An unexpected error occurred. Please try again later.";
-		let errorCode = "UNKNOWN_ERROR";
+import client from "./client";
+import { errorHandler } from "./errorHandler";
 
-		if (error.response) {
-			console.error(`API Error at ${url}:`, error.response.data);
-			// Server responded with a status other than 200 range
-			const { status, data } = error.response;
-			// message = data.message || "Something went wrong";
-			switch (status) {
-				case 400:
-					message = data.message || "Bad Request";
-					errorCode = "BAD_REQUEST";
-					break;
-				case 401:
-					message = data.message || "Invalid username or password";
-					errorCode = "UNAUTHORIZED";
-					break;
-				case 404:
-					message = data.message || "Resource not found";
-					errorCode = "NOT_FOUND";
-					break;
-				case 409:
-					message = data.message || "Resource already exists";
-					errorCode = "NOT_FOUND";
-					break;
-				case 500:
-					message = data.message || "Internal Server Error";
-					errorCode = "INTERNAL_SERVER_ERROR";
-					break;
-				default:
-					message = data.message || "Something went wrong";
-					errorCode = "API_ERROR";
-			}
-		} else if (error.request) {
-			console.error(`Network Error at ${url}:`, error.request);
-			message = "Network error. Please try again.";
-            errorCode = "NETWORK_ERROR";
-		} else {
-			// Something else caused the error
-			console.error("Error:", error.message);
+export const setupAxiosInterceptors = (accessToken, onUnauthorized) => {
+	// Set up request interceptor
+	const requestInterceptor = client.interceptors.request.use((config) => {
+		if (accessToken) {
+			config.headers.authorization = `Bearer ${accessToken}`;
 		}
+		return config;
+	});
 
-		return {
-			error: true,
-			success: false,
-			message,
-			errorCode,
-		};
-	}
-}
+	// Set up response interceptor
+	const responseInterceptor = client.interceptors.response.use(
+		(response) => response,
+		(error) => {
+			if (error.response && error.response.status === 401) {
+				onUnauthorized(); // Custom behavior when the user is unauthorized
+			}
+			return Promise.reject(errorHandler.handle(error));
+		}
+	);
 
-export const errorHandler = new ErrorHandler();
+	// Return eject functions to clean up interceptors when needed
+	return () => {
+		client.interceptors.request.eject(requestInterceptor);
+		client.interceptors.response.eject(responseInterceptor);
+	};
+};

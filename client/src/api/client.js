@@ -1,24 +1,17 @@
 import axios from "axios";
 import routes from "../constants/routes";
-import { errorHandler } from "./interceptors";
 
-const client = axios.create({
+const axiosConfig = {
 	baseURL: routes.host,
 	headers: {
 		"Content-Type": "application/json",
 	},
-});
+	withCredentials: true,
+}
+
+const client = axios.create(axiosConfig);
 
 // Interceptor for handling responses
-client.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle errors centrally
-    return Promise.reject(errorHandler.handle(error));
-  }
-);
 
 // You can create request interceptors for attaching tokens or similar logic
 // apiClient.interceptors.request.use(handleAttachToken, handlePromisReject);
